@@ -5,9 +5,9 @@ import SignUpPage from '../SignUp'
 import HomePage from '../Home'
 import Loading from '../Loading'
 import * as ROUTES from '../../constants/routes'
-import { AuthUserContext } from '../Session'
+import { AuthUserContext } from '../../contexts/Session'
 
-import { withFirebase } from '../Firebase'
+import { withFirebase } from '../../contexts/Firebase'
 
 const INITIAL_STATES = {
     authUser: null,

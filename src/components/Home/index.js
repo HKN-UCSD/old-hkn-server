@@ -22,7 +22,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 // import NotificationsIcon from '@material-ui/icons/Notifications';
 import { compose } from 'recompose'
-import { withFirebase } from '../Firebase'
+import { withFirebase } from '../../contexts/Firebase'
 import ResumeContent from './resume'
 
 import * as ROUTES from '../../constants/routes'

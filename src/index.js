@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import App from './components/App';
-import Firebase, { FirebaseContext } from './components/Firebase'
+import Firebase, { FirebaseContext } from './contexts/Firebase'
 
 import * as serviceWorker from './serviceWorker'
 

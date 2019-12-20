@@ -17,7 +17,7 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
 import { compose } from 'recompose'
-import { withFirebase } from '../Firebase'
+import { withFirebase } from '../../contexts/Firebase'
 
 const styles = theme => ({
     root: {
@@ -110,7 +110,7 @@ class ResumeContent extends React.Component {
                 if (data.resumeUploadTimestamp == null || data.resumeFilename == null) {
                     throw Error('Resume data does not exist.')
                 }
-                
+
                 let uid = this.props.firebase.auth.currentUser.uid
                 let fileName = data.resumeFilename
 
@@ -120,9 +120,9 @@ class ResumeContent extends React.Component {
                     timestamp: this.getTimestampString(data.resumeUploadTimestamp),
                     filename: data.resumeFilename,
                 })
-                
+
                 let path = 'users/'+uid+'/resume/'+fileName
-                
+
                 console.log(path)
 
                 let fileRef = this.props.firebase.storage.ref(path);
@@ -293,7 +293,7 @@ class ResumeContent extends React.Component {
                         disabled={!this.state.uploaded}
                     >
                         DOWNLOAD
-                        <CloudDownloadIcon className={this.props.classes.rightIcon} />    
+                        <CloudDownloadIcon className={this.props.classes.rightIcon} />
                     </Button>
                 )
             case RIGHT_BUTTON_ACTIONS.UPLOAD:
@@ -306,7 +306,7 @@ class ResumeContent extends React.Component {
                         disabled={this.state.uploaded}
                     >
                         UPLOAD
-                        <CloudUploadIcon className={this.props.classes.rightIcon} />    
+                        <CloudUploadIcon className={this.props.classes.rightIcon} />
                     </Button>
                 )
             default:
@@ -316,11 +316,11 @@ class ResumeContent extends React.Component {
 
     getResumeDisplayComponent = () => {
         if (this.state.uploaded) {
-            return (<iframe 
-                        frameBorder="0" 
+            return (<iframe
+                        frameBorder="0"
                         src={this.state.resumeDownloadURL}
                         width="100%"
-                        height="80%" 
+                        height="80%"
                     />)
         } else {
             return (<PdfIcon className={this.props.classes.pdfIcon} color='disabled' />)

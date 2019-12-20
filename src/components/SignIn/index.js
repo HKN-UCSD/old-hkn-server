@@ -19,7 +19,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 
-import { withFirebase } from '../Firebase'
+import { withFirebase } from '../../contexts/Firebase'
 import { Link } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import { compose } from 'recompose'
@@ -127,7 +127,7 @@ class SignInPage extends React.Component {
                     this.props.history.push(ROUTES.HOME)
                 } else {
                     this.props.firebase.doSignOut()
-        
+
                     this.setState({
                         verifyEmailDialogOpen: true,
                     })

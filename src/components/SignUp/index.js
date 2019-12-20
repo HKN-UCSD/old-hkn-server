@@ -17,7 +17,7 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
 import { Link } from 'react-router-dom'
-import { withFirebase } from '../Firebase'
+import { withFirebase } from '../../contexts/Firebase'
 import * as ROUTES from '../../constants/routes'
 import { compose } from 'recompose'
 
@@ -183,7 +183,7 @@ class SignUpPage extends React.Component {
             whitelistDialogOpen: true
         })
 
-        event.preventDefault()   
+        event.preventDefault()
     }
 
     handleWhitelistConfirm = event => {
