@@ -22,10 +22,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "eject": "react-scripts eject",
+    "lint": "eslint --ignore-path .gitignore ."
   },
   "browserslist": [
     ">0.2%",
@@ -34,7 +32,24 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "eslint": "^6.3.0",
-    "eslint-plugin-react": "^7.14.3"
+    "eslint": "^6.7.2",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-react": "^7.14.3",
+    "husky": "^3.1.0",
+    "lint-staged": "^9.5.0",
+    "prettier": "^1.19.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --ignorepath .gitignore --fix .",
+      "git add"
+    ]
   }
 }
