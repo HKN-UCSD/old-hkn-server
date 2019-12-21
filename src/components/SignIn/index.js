@@ -30,7 +30,7 @@ const INITIAL_STATE = {
   email: '',
   password: '',
   forgotPasswordEmail: '',
-  checked: false,
+  shouldRememberUser: false,
   signInError: null,
   verifyEmailError: null,
   failedSignInDialogOpen: false,
@@ -63,11 +63,11 @@ class SignInPage extends React.Component {
   }
 
   handleSignIn = event => {
-    const { email, password, checked } = this.state;
+    const { email, password, shouldRememberUser } = this.state;
     const { firebase, history } = this.props;
 
     firebase
-      .doSignInWithEmailAndPassword(email, password, checked)
+      .doSignInWithEmailAndPassword(email, password, shouldRememberUser)
       .then(() => {
         if (firebase.auth.currentUser.emailVerified) {
           history.push(ROUTES.HOME);
@@ -101,6 +101,10 @@ class SignInPage extends React.Component {
     this.setState({ forgotPasswordEmail: event.target.value });
   };
 
+  handleCheckRemember = event => {
+    this.setState({ shouldRememberUser: event.target.checked });
+  };
+
   handleFailedSignInDialogClose = () => {
     this.setState({
       failedSignInDialogOpen: false,
@@ -131,10 +135,6 @@ class SignInPage extends React.Component {
           failedSendVerificationEmailDialogOpen: true,
         });
       });
-  };
-
-  handleCheckRemember = event => {
-    this.setState({ checked: event.target.checked });
   };
 
   handleForgotPassword = () => {
@@ -190,7 +190,7 @@ class SignInPage extends React.Component {
     const {
       email,
       password,
-      checked,
+      shouldRememberUser,
       forgotPasswordEmail,
       signInError,
       verifyEmailError,
@@ -240,7 +240,7 @@ class SignInPage extends React.Component {
                   value='remember'
                   color='primary'
                   onChange={this.handleCheckRemember}
-                  checked={checked}
+                  checked={shouldRememberUser}
                 />
               }
               label='Remember me'
