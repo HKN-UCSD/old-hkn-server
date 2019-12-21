@@ -48,7 +48,6 @@
   },
   "lint-staged": {
     "*.js": [
-      "eslint --ignore-path .gitignore --fix .",
       "git add"
     ]
   }
