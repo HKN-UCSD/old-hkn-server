@@ -24,6 +24,7 @@
   "plugins": ["react"],
   "rules": {
     "react/jsx-filename-extension": "off",
-    "react/jsx-props-no-spreading": "off"
+    "react/jsx-props-no-spreading": "off",
+    "react/prop-types": [2, { "ignore": ["firebase", "classes", "history"] }]
   }
 }
