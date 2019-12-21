@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -19,71 +18,13 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { withFirebase } from '../../contexts/Firebase';
-import { Link } from 'react-router-dom';
-import * as ROUTES from '../../constants/routes';
+import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { withRouter } from 'react-router-dom';
 
-const styles = theme => ({
-  main: {
-    width: 'auto',
-    display: 'block',
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-      width: 400,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
-  },
-  paper: {
-    marginTop: theme.spacing.unit * 8,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-      .spacing.unit * 3}px`,
-  },
-  avatar: {
-    margin: theme.spacing.unit,
-    width: '112px',
-    height: '80px',
-  },
-  form: {
-    width: '100%',
-    marginTop: theme.spacing.unit,
-  },
-  signin: {
-    marginTop: theme.spacing.unit * 3,
-  },
-  forgotPassword: {
-    textTransform: 'none',
-    '&:hover': {
-      backgroundColor: 'transparent',
-    },
-    float: 'right',
-    marginTop: theme.spacing.unit,
-  },
-  signupFooter: {
-    marginTop: theme.spacing.unit * 3,
-    textTransform: 'none',
-    textAlign: 'center',
-    flexDirection: 'column',
-    display: 'flex',
-  },
-  signupLink: {
-    textDecoration: 'none',
-  },
-  footer: {
-    marginTop: theme.spacing.unit * 3,
-    textAlign: 'center',
-  },
-  footerLink: {
-    textDecoration: 'none',
-    color: 'inherit',
-  },
-});
+import styles from './styles';
+import hknLogo from '../../images/hkn-trident.png';
+import { withFirebase } from '../../contexts/Firebase';
+import * as ROUTES from '../../constants/routes';
 
 const INITIAL_STATE = {
   email: '',
@@ -109,9 +50,10 @@ class SignInPage extends React.Component {
   }
 
   componentDidMount() {
-    this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
+    const { firebase, history } = this.props;
+    this.listener = firebase.auth.onAuthStateChanged(authUser => {
       if (authUser && authUser.isEmailVerified) {
-        this.props.history.push(ROUTES.HOME);
+        history.push(ROUTES.HOME);
       }
     });
   }
@@ -121,15 +63,16 @@ class SignInPage extends React.Component {
   }
 
   handleSignIn = event => {
-    const { email, password } = this.state;
+    const { email, password, checked } = this.state;
+    const { firebase, history } = this.props;
 
-    this.props.firebase
-      .doSignInWithEmailAndPassword(email, password, this.state.checked)
+    firebase
+      .doSignInWithEmailAndPassword(email, password, checked)
       .then(() => {
-        if (this.props.firebase.auth.currentUser.emailVerified) {
-          this.props.history.push(ROUTES.HOME);
+        if (firebase.auth.currentUser.emailVerified) {
+          history.push(ROUTES.HOME);
         } else {
-          this.props.firebase.doSignOut();
+          firebase.doSignOut();
 
           this.setState({
             verifyEmailDialogOpen: true,
@@ -158,22 +101,26 @@ class SignInPage extends React.Component {
     this.setState({ forgotPasswordEmail: event.target.value });
   };
 
-  handleFailedSignInDialogClose = event => {
+  handleFailedSignInDialogClose = () => {
     this.setState({
       failedSignInDialogOpen: false,
       password: '',
     });
   };
 
-  handleVerifyEmailDialogClose = event => {
+  handleVerifyEmailDialogClose = () => {
+    const { firebase } = this.props;
+
     this.setState({
       verifyEmailDialogOpen: false,
     });
-    this.props.firebase.doSignOut();
+    firebase.doSignOut();
   };
 
-  handleResendVerificationEmail = event => {
-    this.props.firebase
+  handleResendVerificationEmail = () => {
+    const { firebase } = this.props;
+
+    firebase
       .doSendVerificationEmail()
       .then(() => {
         this.handleVerifyEmailDialogClose();
@@ -181,7 +128,6 @@ class SignInPage extends React.Component {
       .catch(error => {
         this.setState({
           verifyEmailError: error,
-          emailVerificationDialogOpen: false,
           failedSendVerificationEmailDialogOpen: true,
         });
       });
@@ -191,15 +137,18 @@ class SignInPage extends React.Component {
     this.setState({ checked: event.target.checked });
   };
 
-  handleForgotPassword = event => {
+  handleForgotPassword = () => {
     this.setState({
       forgotPasswordDialogOpen: true,
     });
   };
 
-  handleForgotPasswordConfirm = event => {
-    this.props.firebase
-      .doPasswordReset(this.state.forgotPasswordEmail)
+  handleForgotPasswordConfirm = () => {
+    const { firebase } = this.props;
+    const { forgotPasswordEmail } = this.state;
+
+    firebase
+      .doPasswordReset(forgotPasswordEmail)
       .then(() => {
         this.setState({
           successfulForgotPasswordConfirmDialogOpen: true,
@@ -237,21 +186,32 @@ class SignInPage extends React.Component {
   };
 
   render() {
+    const { classes } = this.props;
+    const {
+      email,
+      password,
+      checked,
+      forgotPasswordEmail,
+      signInError,
+      verifyEmailError,
+      forgotPasswordConfirmError,
+      failedSignInDialogOpen,
+      verifyEmailDialogOpen,
+      failedSendVerificationEmailDialogOpen,
+      successfulForgotPasswordConfirmDialogOpen,
+      failedForgotPasswordConfirmDialogOpen,
+      forgotPasswordDialogOpen,
+    } = this.state;
+
     return (
-      <main className={this.props.classes.main}>
+      <main className={classes.main}>
         <CssBaseline />
-        <Paper className={this.props.classes.paper}>
-          <Avatar
-            className={this.props.classes.avatar}
-            src={require('../../images/hkn-trident.png')}
-          />
+        <Paper className={classes.paper}>
+          <Avatar className={classes.avatar} src={hknLogo} />
           <Typography component='h1' variant='h5'>
             Member Portal Login
           </Typography>
-          <form
-            className={this.props.classes.form}
-            onSubmit={this.handleSignIn}
-          >
+          <form className={classes.form} onSubmit={this.handleSignIn}>
             <FormControl margin='normal' required fullWidth>
               <InputLabel htmlFor='email'>Email Address</InputLabel>
               <Input
@@ -259,8 +219,8 @@ class SignInPage extends React.Component {
                 name='email'
                 autoComplete='email'
                 autoFocus
-                onChange={this.handleEmailChange.bind(this)}
-                value={this.state.email}
+                onChange={this.handleEmailChange}
+                value={email}
               />
             </FormControl>
             <FormControl margin='normal' required fullWidth>
@@ -270,8 +230,8 @@ class SignInPage extends React.Component {
                 type='password'
                 id='password'
                 autoComplete='current-password'
-                onChange={this.handlePasswordChange.bind(this)}
-                value={this.state.password}
+                onChange={this.handlePasswordChange}
+                value={password}
               />
             </FormControl>
             <FormControlLabel
@@ -279,8 +239,8 @@ class SignInPage extends React.Component {
                 <Checkbox
                   value='remember'
                   color='primary'
-                  onChange={this.handleCheckRemember.bind(this)}
-                  checked={this.state.checked}
+                  onChange={this.handleCheckRemember}
+                  checked={checked}
                 />
               }
               label='Remember me'
@@ -289,7 +249,7 @@ class SignInPage extends React.Component {
               size='small'
               variant='text'
               onClick={this.handleForgotPassword}
-              className={this.props.classes.forgotPassword}
+              className={classes.forgotPassword}
             >
               Forgot password?
             </Button>
@@ -298,28 +258,24 @@ class SignInPage extends React.Component {
               fullWidth
               variant='contained'
               color='primary'
-              className={this.props.classes.signin}
+              className={classes.signin}
             >
               Sign in
             </Button>
           </form>
         </Paper>
-        <div className={this.props.classes.signupFooter}>
+        <div className={classes.signupFooter}>
           <Typography component='p' style={{ display: 'inline-block' }}>
-            Don't have an account?{' '}
-            <Link to={ROUTES.SIGN_UP} className={this.props.classes.signupLink}>
+            Don&apos;t have an account?{' '}
+            <Link to={ROUTES.SIGN_UP} className={classes.signupLink}>
               Sign up
             </Link>
           </Typography>
         </div>
-        <Typography
-          className={this.props.classes.footer}
-          variant='caption'
-          gutterBottom
-        >
+        <Typography className={classes.footer} variant='caption' gutterBottom>
           <a
-            className={this.props.classes.footerLink}
-            href={'http://hkn.ucsd.edu'}
+            className={classes.footerLink}
+            href='http://hkn.ucsd.edu'
             target='_blank'
             rel='noopener noreferrer'
           >
@@ -329,15 +285,15 @@ class SignInPage extends React.Component {
         </Typography>
         <div>
           <Dialog
-            open={this.state.failedSignInDialogOpen}
+            open={failedSignInDialogOpen}
             onClose={this.handleFailedSignInDialogClose}
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
           >
-            <DialogTitle id='alert-dialog-title'>{'Error'}</DialogTitle>
+            <DialogTitle id='alert-dialog-title'>Error</DialogTitle>
             <DialogContent>
               <DialogContentText id='alert-dialog-description'>
-                {this.state.signInError ? this.state.signInError.message : ''}
+                {signInError ? signInError.message : ''}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -351,7 +307,7 @@ class SignInPage extends React.Component {
             </DialogActions>
           </Dialog>
           <Dialog
-            open={this.state.verifyEmailDialogOpen}
+            open={verifyEmailDialogOpen}
             onClose={this.handleVerifyEmailDialogClose}
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
@@ -380,17 +336,16 @@ class SignInPage extends React.Component {
             </DialogActions>
           </Dialog>
           <Dialog
-            open={this.state.failedSendVerificationEmailDialogOpen}
+            open={failedSendVerificationEmailDialogOpen}
             onClose={this.handleFailedSendVerificationEmailDialogClose}
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
           >
-            <DialogTitle id='alert-dialog-title'>{'Error'}</DialogTitle>
+            <DialogTitle id='alert-dialog-title'>Error</DialogTitle>
             <DialogContent>
               <DialogContentText id='alert-dialog-description'>
-                {this.state.verifyEmailError
-                  ? this.state.verifyEmailError.message +
-                    'You can click RESEND below to resend the verification email. If this issue persists, please contact a HKN officer.'
+                {verifyEmailError
+                  ? `${verifyEmailError.message}You can click RESEND below to resend the verification email. If this issue persists, please contact a HKN officer.`
                   : ''}
               </DialogContentText>
             </DialogContent>
@@ -411,16 +366,16 @@ class SignInPage extends React.Component {
             </DialogActions>
           </Dialog>
           <Dialog
-            open={this.state.failedForgotPasswordConfirmDialogOpen}
+            open={failedForgotPasswordConfirmDialogOpen}
             onClose={this.handleFailedForgotPasswordConfirmDialogClose}
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
           >
-            <DialogTitle id='alert-dialog-title'>{'Error'}</DialogTitle>
+            <DialogTitle id='alert-dialog-title'>Error</DialogTitle>
             <DialogContent>
               <DialogContentText id='alert-dialog-description'>
-                {this.state.forgotPasswordConfirmError
-                  ? this.state.forgotPasswordConfirmError.message
+                {forgotPasswordConfirmError
+                  ? forgotPasswordConfirmError.message
                   : ''}
               </DialogContentText>
             </DialogContent>
@@ -434,12 +389,12 @@ class SignInPage extends React.Component {
             </DialogActions>
           </Dialog>
           <Dialog
-            open={this.state.successfulForgotPasswordConfirmDialogOpen}
+            open={successfulForgotPasswordConfirmDialogOpen}
             onClose={this.handleSuccessfulForgotPasswordConfirmDialogClose}
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
           >
-            <DialogTitle id='alert-dialog-title'>{'Success'}</DialogTitle>
+            <DialogTitle id='alert-dialog-title'>Success</DialogTitle>
             <DialogContent>
               <DialogContentText id='alert-dialog-description'>
                 A link to reset password has been sent to your email address.
@@ -455,13 +410,11 @@ class SignInPage extends React.Component {
             </DialogActions>
           </Dialog>
           <Dialog
-            open={this.state.forgotPasswordDialogOpen}
+            open={forgotPasswordDialogOpen}
             onClose={this.handleForgotPasswordDialogClose}
             aria-labelledby='alert-dialog-title'
           >
-            <DialogTitle id='alert-dialog-title'>
-              {'Forgot password'}
-            </DialogTitle>
+            <DialogTitle id='alert-dialog-title'>Forgot password</DialogTitle>
             <DialogContent>
               <DialogContentText id='alert-dialog-description'>
                 To reset your password, please enter your email address below.
@@ -473,8 +426,8 @@ class SignInPage extends React.Component {
                 label='Email Address'
                 type='email'
                 fullWidth
-                onChange={this.handleForgotPasswordEmailChange.bind(this)}
-                value={this.state.forgotPasswordEmail}
+                onChange={this.handleForgotPasswordEmailChange}
+                value={forgotPasswordEmail}
               />
             </DialogContent>
             <DialogActions>
@@ -497,10 +450,6 @@ class SignInPage extends React.Component {
     );
   }
 }
-
-SignInPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default compose(
   withStyles(styles),
