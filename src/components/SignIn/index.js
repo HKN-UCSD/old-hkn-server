@@ -13,7 +13,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -22,6 +21,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import styles from './styles';
+import ForgotPassword from './ForgotPassword';
 import hknLogo from '../../images/hkn-trident.png';
 import { withFirebase } from '../../contexts/Firebase';
 import * as ROUTES from '../../constants/routes';
@@ -29,7 +29,6 @@ import * as ROUTES from '../../constants/routes';
 const INITIAL_STATE = {
   email: '',
   password: '',
-  forgotPasswordEmail: '',
   shouldRememberUser: false,
   signInError: null,
   verifyEmailError: null,
@@ -37,9 +36,6 @@ const INITIAL_STATE = {
   verifyEmailDialogOpen: false,
   failedSendVerificationEmailDialogOpen: false,
   forgotPasswordDialogOpen: false,
-  successfulForgotPasswordConfirmDialogOpen: false,
-  failedForgotPasswordConfirmDialogOpen: false,
-  forgotPasswordConfirmError: null,
 };
 
 class SignInPage extends React.Component {
@@ -84,10 +80,6 @@ class SignInPage extends React.Component {
     this.setState({ password: event.target.value });
   };
 
-  handleForgotPasswordEmailChange = event => {
-    this.setState({ forgotPasswordEmail: event.target.value });
-  };
-
   handleCheckRemember = event => {
     this.setState({ shouldRememberUser: event.target.checked });
   };
@@ -124,51 +116,9 @@ class SignInPage extends React.Component {
       });
   };
 
-  handleForgotPassword = () => {
+  handleForgotPassword = state => {
     this.setState({
-      forgotPasswordDialogOpen: true,
-    });
-  };
-
-  handleForgotPasswordConfirm = () => {
-    const { firebase } = this.props;
-    const { forgotPasswordEmail } = this.state;
-
-    firebase
-      .doPasswordReset(forgotPasswordEmail)
-      .then(() => {
-        this.setState({
-          successfulForgotPasswordConfirmDialogOpen: true,
-          forgotPasswordDialogOpen: false,
-        });
-      })
-      .catch(error => {
-        this.setState({
-          forgotPasswordConfirmError: error,
-          failedForgotPasswordConfirmDialogOpen: true,
-          forgotPasswordDialogOpen: false,
-        });
-      });
-  };
-
-  handleForgotPasswordDialogClose = () => {
-    this.setState({
-      forgotPasswordDialogOpen: false,
-      forgotPasswordEmail: '',
-    });
-  };
-
-  handleSuccessfulForgotPasswordConfirmDialogClose = () => {
-    this.setState({
-      successfulForgotPasswordConfirmDialogOpen: false,
-    });
-  };
-
-  handleFailedForgotPasswordConfirmDialogClose = () => {
-    this.setState({
-      forgotPasswordConfirmError: null,
-      failedForgotPasswordConfirmDialogOpen: false,
-      forgotPasswordDialogOpen: true,
+      forgotPasswordDialogOpen: state,
     });
   };
 
@@ -178,16 +128,12 @@ class SignInPage extends React.Component {
       email,
       password,
       shouldRememberUser,
-      forgotPasswordEmail,
       signInError,
       verifyEmailError,
-      forgotPasswordConfirmError,
+      forgotPasswordDialogOpen,
       failedSignInDialogOpen,
       verifyEmailDialogOpen,
       failedSendVerificationEmailDialogOpen,
-      successfulForgotPasswordConfirmDialogOpen,
-      failedForgotPasswordConfirmDialogOpen,
-      forgotPasswordDialogOpen,
     } = this.state;
 
     return (
@@ -235,7 +181,7 @@ class SignInPage extends React.Component {
             <Button
               size='small'
               variant='text'
-              onClick={this.handleForgotPassword}
+              onClick={() => this.handleForgotPassword(true)}
               className={classes.forgotPassword}
             >
               Forgot password?
@@ -271,6 +217,9 @@ class SignInPage extends React.Component {
           </a>
         </Typography>
         <div>
+          {forgotPasswordDialogOpen && (
+            <ForgotPassword handleClose={this.handleForgotPassword(false)} />
+          )}
           <Dialog
             open={failedSignInDialogOpen}
             onClose={this.handleFailedSignInDialogClose}
@@ -349,86 +298,6 @@ class SignInPage extends React.Component {
                 autoFocus
               >
                 GOT IT
-              </Button>
-            </DialogActions>
-          </Dialog>
-          <Dialog
-            open={failedForgotPasswordConfirmDialogOpen}
-            onClose={this.handleFailedForgotPasswordConfirmDialogClose}
-            aria-labelledby='alert-dialog-title'
-            aria-describedby='alert-dialog-description'
-          >
-            <DialogTitle id='alert-dialog-title'>Error</DialogTitle>
-            <DialogContent>
-              <DialogContentText id='alert-dialog-description'>
-                {forgotPasswordConfirmError
-                  ? forgotPasswordConfirmError.message
-                  : ''}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={this.handleFailedForgotPasswordConfirmDialogClose}
-                color='primary'
-              >
-                BACK
-              </Button>
-            </DialogActions>
-          </Dialog>
-          <Dialog
-            open={successfulForgotPasswordConfirmDialogOpen}
-            onClose={this.handleSuccessfulForgotPasswordConfirmDialogClose}
-            aria-labelledby='alert-dialog-title'
-            aria-describedby='alert-dialog-description'
-          >
-            <DialogTitle id='alert-dialog-title'>Success</DialogTitle>
-            <DialogContent>
-              <DialogContentText id='alert-dialog-description'>
-                A link to reset password has been sent to your email address.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={this.handleSuccessfulForgotPasswordConfirmDialogClose}
-                color='primary'
-              >
-                GOT IT
-              </Button>
-            </DialogActions>
-          </Dialog>
-          <Dialog
-            open={forgotPasswordDialogOpen}
-            onClose={this.handleForgotPasswordDialogClose}
-            aria-labelledby='alert-dialog-title'
-          >
-            <DialogTitle id='alert-dialog-title'>Forgot password</DialogTitle>
-            <DialogContent>
-              <DialogContentText id='alert-dialog-description'>
-                To reset your password, please enter your email address below.
-              </DialogContentText>
-              <TextField
-                autoFocus
-                margin='dense'
-                id='forgotPasswordEmailField'
-                label='Email Address'
-                type='email'
-                fullWidth
-                onChange={this.handleForgotPasswordEmailChange}
-                value={forgotPasswordEmail}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={this.handleForgotPasswordDialogClose}
-                color='primary'
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={this.handleForgotPasswordConfirm}
-                color='primary'
-              >
-                Confirm
               </Button>
             </DialogActions>
           </Dialog>
