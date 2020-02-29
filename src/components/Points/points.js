@@ -88,11 +88,11 @@ class PointsPage extends React.Component {
 
     this.props.firebase.getEnumMap('pointRewardType')
       .then((pointEnum) => {
-        if(pointEnum && pointEnum.name && pointEnum.message && pointEnum.stack) {
+        if (pointEnum && pointEnum.name && pointEnum.message && pointEnum.stack) {
           console.log(pointEnum);
           throw Error("Point types unavailable");
         }
-        this.setState({ pointRewardTypes: pointEnum }) 
+        this.setState({ pointRewardTypes: pointEnum })
       })
       .then(() => {
         this.props.firebase.getPoints()
@@ -151,7 +151,7 @@ class PointsPage extends React.Component {
         <div className={this.props.classes.contentWrapper}>
           {this.state.userRole === this.state.roles[USER_ROLES.MEMBER] || this.state.userRole === this.state.roles[USER_ROLES.OFFICER] ?
             <div>
-              <div style={{margin:"20px"}}>
+              <div style={{ margin: "20px" }}>
                 <h2>Member Points</h2>
                 <Grid container justify="space-between">
                   <Grid item><h3>Total Member Points: {this.state.totalPoints.member}</h3></Grid>
@@ -166,7 +166,7 @@ class PointsPage extends React.Component {
               <Divider />
             </div> : null}
 
-          <div style={{margin:"20px"}}>
+          <div style={{ margin: "20px" }}>
             <h2>Inductee Points</h2>
             <Grid container justify="space-between" spacing={3}>
               <Grid item><h3>Total Inductee Points: {this.state.totalPoints.induction}</h3></Grid>

@@ -30,10 +30,11 @@ class PointDisplay extends React.Component {
   }
 
   componentDidUpdate() {
-    if(this.state.points !== this.props.points) {
+    if (this.state.points !== this.props.points) {
       this.setState({
         points: this.props.points
       })
+      console.log(this.props.points)
     }
   }
   // componentWillReceiveProps(newProps) { this.setState(newProps); }
