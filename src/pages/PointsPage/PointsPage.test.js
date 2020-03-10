@@ -1,27 +1,31 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { FirebaseContext } from '../Firebase'
-//import test from 'firebase-functions-test'
+import { withFirebase } from '../../services/Firebase/index';
+// import test from 'firebase-functions-test'
 
-import PointsPage from './points'
+import PointsPage from './points';
 
 class FirebaseMock {
-  getEnumMap = (collection) => {
+  getEnumMap = collection => {
     if (collection === 'roles') {
-      return new Promise((resolve) => {
-        return { Officer: 'Officer', Inductee: 'Inductee', Member: 'Member' }
-      })
+      return new Promise(() => {
+        return { Officer: 'Officer', Inductee: 'Inductee', Member: 'Member' };
+      });
     }
     if (collection === 'pointRewardType') {
-      return new Promise((resolve) => {
-        //return test.firestore.makeDocumentSnapshot({ Induction_Point: 'Induction Point', Member_Point: 'Member Point' }, 'document/path')
-        return { Induction_Point: 'Induction Point', Member_Point: 'Member Point' }
-      })
+      return new Promise(() => {
+        // return test.firestore.makeDocumentSnapshot({ Induction_Point: 'Induction Point', Member_Point: 'Member Point' }, 'document/path')
+        return {
+          Induction_Point: 'Induction Point',
+          Member_Point: 'Member Point',
+        };
+      });
     }
-  }
+    return null;
+  };
 
   getUserDocument = () => {
-    return new Promise((resolve) => {
+    return new Promise(() => {
       return {
         data: {
           email: 'tester@testing.test',
@@ -29,22 +33,19 @@ class FirebaseMock {
           role_id: 'testKey',
           mentorship: true,
           professional: true,
-        }
-      }
-    })
-  }
+        },
+      };
+    });
+  };
 }
 
 describe('<PointsPage />', () => {
-
   it('renders', () => {
     const wrapper = mount(<PointsPage />, {
-      wrappingComponent: FirebaseContext.Provider,
-      wrappingComponentProps: { value: new FirebaseMock() }
-    })
+      wrappingComponent: withFirebase.Provider,
+      wrappingComponentProps: { value: new FirebaseMock() },
+    });
 
-    console.log(wrapper.debug())
-  })
-
-})
-
+    console.log(wrapper.debug());
+  });
+});
