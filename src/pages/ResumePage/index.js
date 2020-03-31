@@ -98,12 +98,6 @@ class ResumePage extends React.Component {
     const { firebase } = this.props;
     firebase
       .getUserDocument()
-      .then(docSnapshot => {
-        if (!docSnapshot.exists) {
-          throw Error('User document does not exist.');
-        }
-        return docSnapshot.data();
-      })
       .then(data => {
         if (data.resumeUploadTimestamp == null || data.resumeFilename == null) {
           throw Error('Resume data does not exist.');

@@ -67,7 +67,18 @@ class Firebase {
       return this.db
         .collection('users')
         .where('role_id', '==', data)
-        .get();
+        .get()
+        .then(querySnapshot => {
+          return querySnapshot.docs.map(doc => {
+            return {
+              id: doc.id,
+              ...doc.data(),
+            };
+          });
+        })
+        .catch(() => {
+          throw Error('Inductee Info Query failed.');
+        });
     });
     // return this.db.collection('users').where("role_id", "==", "a1G5wSOZj20lDegYgZ7j").get()
   };
@@ -112,13 +123,6 @@ class Firebase {
 
   getUserRoleID = () => {
     return this.getUserDocument()
-      .then(docSnapshot => {
-        if (!docSnapshot.exists) {
-          throw Error('User document does not exist.');
-        }
-
-        return docSnapshot.data();
-      })
       .then(data => {
         if (!data.role_id) {
           throw Error('Role ID of user does not exist.');
@@ -172,7 +176,13 @@ class Firebase {
     return this.db
       .collection('users')
       .doc(this.auth.currentUser.uid)
-      .get();
+      .get()
+      .then(snapshot => {
+        return snapshot.data();
+      })
+      .catch(() => {
+        throw Error('User Doc Query failed.');
+      });
   };
 
   getPoints = () => {
@@ -181,6 +191,9 @@ class Firebase {
       return eventPoints
         .where('user_id', '==', this.auth.currentUser.uid)
         .get()
+        .then(snapshot => {
+          return snapshot.docs.map(doc => doc.data());
+        })
         .catch(() => {
           throw Error('Points Query failed.');
         });
@@ -210,13 +223,6 @@ class Firebase {
 
   getUserRoleID = () => {
     return this.getUserDocument()
-      .then(docSnapshot => {
-        if (!docSnapshot.exists) {
-          throw Error('User document does not exist.');
-        }
-
-        return docSnapshot.data();
-      })
       .then(data => {
         if (!data.role_id) {
           throw Error('Role ID of user does not exist.');

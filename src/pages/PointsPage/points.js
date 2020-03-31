@@ -66,12 +66,6 @@ class PointsPage extends React.Component {
 
     firebase
       .getUserDocument()
-      .then(docSnapshot => {
-        if (!docSnapshot.exists) {
-          throw Error('User document does not exist.');
-        }
-        return docSnapshot.data();
-      })
       .then(data => {
         this.setState({
           userRole: data.role_id,
@@ -99,10 +93,7 @@ class PointsPage extends React.Component {
         const { pointRewardTypes } = this.state;
         firebase
           .getPoints()
-          .then(snapshot => {
-            if (!snapshot) {
-              throw Error('Points query failed');
-            }
+          .then(pointDetails => {
             const pointsList = {
               inducteePointsList: [],
               inducteeMentorList: [],
@@ -113,8 +104,7 @@ class PointsPage extends React.Component {
                 member: 0,
               },
             };
-            snapshot.docs.forEach(doc => {
-              const data = doc.data();
+            pointDetails.forEach(data => {
               if (
                 data.pointrewardtype_id ===
                 pointRewardTypes[POINT_TYPE.INDUCTION]

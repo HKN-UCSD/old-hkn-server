@@ -57,9 +57,8 @@ class InducteePoints extends React.Component {
       })
       .then(isOfficer => {
         if (isOfficer) {
-          firebase.getInducteesInfo().then(querySnapshot => {
-            querySnapshot.forEach(doc => {
-              const data = doc.data();
+          firebase.getInducteesInfo().then(inducteeInfo => {
+            inducteeInfo.forEach(data => {
               const {
                 induction_points: inductionPoints,
                 professional,
@@ -72,7 +71,7 @@ class InducteePoints extends React.Component {
                 officerSigns = [];
               }
 
-              const uid = doc.id;
+              const uid = data.id;
               const mentorshipStatus = mentorship ? 'Complete' : 'Incomplete';
               const professionalStatus = professional
                 ? 'Complete'
