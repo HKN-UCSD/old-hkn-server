@@ -1,5 +1,6 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/auth';
 
 // get events for queried user
 const getUserEvent = userId => {
@@ -17,11 +18,11 @@ const getUserEvent = userId => {
     });
 };
 
-const getPoints = userId => {
+const getPoints = () => {
   const eventPoints = firebase.firestore().collection('pointReward');
-  if (userId) {
+  if (firebase.auth().currentUser) {
     return eventPoints
-      .where('user_id', '==', userId)
+      .where('user_id', '==', firebase.auth().currentUser.uid)
       .get()
       .then(snapshot => {
         return snapshot.docs.map(doc => doc.data());

@@ -29,8 +29,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 import styles from './styles';
-import { withFirebase } from '../../services/Firebase';
 import * as ROUTES from '../../constants/routes';
+
+import * as FirebaseUser from '../../services/Firebase/user';
+import * as FirebaseAuth from '../../services/Firebase/auth';
 
 const INITIAL_STATES = {
   isDrawerOpen: false,
@@ -48,9 +50,7 @@ class NavBar extends React.Component {
   }
 
   checkIfOfficer = () => {
-    const { firebase } = this.props;
-    firebase
-      .queryCurrentUserRole()
+    FirebaseUser.queryCurrentUserRole()
       .then(role => {
         if (role === 'Officer') {
           this.setState({
@@ -59,7 +59,7 @@ class NavBar extends React.Component {
         }
       })
       .catch(error => {
-        console.log(`ERROR: ${error}`);
+        throw Error(`ERROR: ${error}`);
       });
   };
 
@@ -72,7 +72,7 @@ class NavBar extends React.Component {
   };
 
   render() {
-    const { classes, children, firebase } = this.props;
+    const { classes, children } = this.props;
     const { isDrawerOpen, isOfficer } = this.state;
     return (
       <div className={classes.root}>
@@ -164,7 +164,7 @@ class NavBar extends React.Component {
           </List>
           <Divider />
           <List>
-            <ListItem button onClick={firebase.doSignOut}>
+            <ListItem button onClick={FirebaseAuth.doSignOut}>
               <ListItemIcon>
                 <SignOutIcon />
               </ListItemIcon>
@@ -182,4 +182,4 @@ NavBar.propTypes = {
   children: PropTypes.objectOf(React.Component).isRequired,
 };
 
-export default compose(withStyles(styles), withFirebase)(NavBar);
+export default compose(withStyles(styles))(NavBar);

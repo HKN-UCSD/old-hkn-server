@@ -16,7 +16,9 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
-import { withFirebase } from '../../services/Firebase';
+
+import * as FirebaseUser from '../../services/Firebase/user';
+import * as FirebaseResume from '../../services/Firebase/resume';
 
 const styles = theme => ({
   root: {
@@ -95,15 +97,13 @@ class ResumePage extends React.Component {
   }
 
   componentDidMount() {
-    const { firebase } = this.props;
-    firebase
-      .getUserDocument()
+    FirebaseUser.getUserDocument()
       .then(data => {
         if (data.resumeUploadTimestamp == null || data.resumeFilename == null) {
           throw Error('Resume data does not exist.');
         }
 
-        const { uid } = firebase.auth.currentUser;
+        const { uid } = data;
         const fileName = data.resumeFilename;
 
         this.setState({
@@ -115,9 +115,7 @@ class ResumePage extends React.Component {
 
         const path = `users/${uid}/resume/${fileName}`;
 
-        const fileRef = firebase.storage.ref(path);
-
-        return fileRef.getDownloadURL();
+        return FirebaseResume.getDownload(path);
       })
       .then(url => {
         this.setState({
@@ -176,7 +174,6 @@ class ResumePage extends React.Component {
 
   handleOpenFile = event => {
     const resumeFile = this.fileInput.files[0];
-    const { firebase } = this.props;
     const { uploaded, filename } = this.state;
 
     const timestamp = new Date().getTime();
@@ -186,7 +183,7 @@ class ResumePage extends React.Component {
         if (!isCorrectSize) {
           throw Error('File size must be less than or equal to 1 MB.');
         }
-        return firebase.uploadResume(resumeFile);
+        return FirebaseResume.uploadResume(resumeFile);
       })
       .then(snapshot => {
         return snapshot.ref.getDownloadURL();
@@ -195,7 +192,7 @@ class ResumePage extends React.Component {
         this.setState({
           resumeDownloadURL: downloadUrl,
         });
-        return firebase.updateResumeFields(
+        return FirebaseResume.updateResumeFields(
           resumeFile.name,
           timestamp,
           downloadUrl
@@ -203,7 +200,7 @@ class ResumePage extends React.Component {
       })
       .then(() => {
         if (uploaded && resumeFile.name !== filename) {
-          return firebase.deleteResume(filename);
+          return FirebaseResume.deleteResume(filename);
         }
         return null;
       })
@@ -250,13 +247,11 @@ class ResumePage extends React.Component {
   };
 
   handleConfirmDelete = () => {
-    const { firebase } = this.props;
     const { filename } = this.state;
 
-    firebase
-      .deleteResume(filename)
+    FirebaseResume.deleteResume(filename)
       .then(() => {
-        return firebase.removeResumeFields();
+        return FirebaseResume.removeResumeFields();
       })
       .then(() => {
         this.setState({
@@ -491,4 +486,4 @@ class ResumePage extends React.Component {
   }
 }
 
-export default compose(withStyles(styles), withFirebase)(ResumePage);
+export default compose(withStyles(styles))(ResumePage);

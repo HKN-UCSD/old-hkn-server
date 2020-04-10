@@ -6,9 +6,11 @@ import { Redirect } from 'react-router-dom';
 import Table from '../../components/Table';
 import PointDetail from './PointDetail';
 
-import { withFirebase } from '../../services/Firebase';
 import { USER_ROLES } from '../../constants/roles';
 import * as ROUTES from '../../constants/routes';
+
+import * as FirebaseUser from '../../services/Firebase/user';
+import * as FirebaseOfficer from '../../services/Firebase/officer';
 
 const INITIAL_STATE = {
   users: [],
@@ -46,10 +48,8 @@ class InducteePoints extends React.Component {
   }
 
   componentDidMount() {
-    const { firebase } = this.props;
     const users = [];
-    firebase
-      .queryCurrentUserRole()
+    FirebaseUser.queryCurrentUserRole()
       .then(userRole => {
         const isOfficer = userRole === USER_ROLES.OFFICER;
         this.setState({ isOfficer });
@@ -57,7 +57,7 @@ class InducteePoints extends React.Component {
       })
       .then(isOfficer => {
         if (isOfficer) {
-          firebase.getInducteesInfo().then(inducteeInfo => {
+          FirebaseOfficer.getInducteesInfo().then(inducteeInfo => {
             inducteeInfo.forEach(data => {
               const {
                 induction_points: inductionPoints,
@@ -117,4 +117,4 @@ class InducteePoints extends React.Component {
   }
 }
 
-export default compose(withStyles(styles), withFirebase)(InducteePoints);
+export default compose(withStyles(styles))(InducteePoints);

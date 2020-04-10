@@ -62,7 +62,7 @@ const getUserRoleID = () => {
 const queryCurrentUserRole = () => {
   return getUserRoleID()
     .then(roleID => {
-      return this.getRoleFromID(roleID);
+      return getRoleFromID(roleID);
     })
     .catch(error => {
       throw Error(`Query for current user role failed: ${error}`);

@@ -2,8 +2,9 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { compose } from 'recompose';
 import { Divider } from '@material-ui/core';
-import { withFirebase } from '../../services/Firebase';
 import EventButtons from './eventButtons';
+
+import * as FirebaseUser from '../../services/Firebase/user';
 
 const styles = theme => ({
   root: {
@@ -88,9 +89,7 @@ class EventsPage extends React.Component {
   };
 
   checkIfInductee() {
-    const { firebase } = this.props;
-    firebase
-      .queryCurrentUserRole()
+    FirebaseUser.queryCurrentUserRole()
       .then(role => {
         if (role !== undefined && role !== 'Inductee') {
           this.setState({
@@ -99,7 +98,7 @@ class EventsPage extends React.Component {
         }
       })
       .catch(error => {
-        console.log(`ERROR: ${error}`);
+        throw Error(`ERROR: ${error}`);
       });
   }
 
@@ -142,4 +141,4 @@ class EventsPage extends React.Component {
   }
 }
 
-export default compose(withStyles(styles), withFirebase)(EventsPage);
+export default compose(withStyles(styles))(EventsPage);
