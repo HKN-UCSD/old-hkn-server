@@ -8,9 +8,9 @@ import { POINT_TYPE } from '../../constants/pointtype';
 
 import PointDisplay from './point_display';
 
-import * as FirebaseUser from '../../services/Firebase/user';
-import getEnumMap from '../../services/Firebase/general';
-import * as FirebaseEvent from '../../services/Firebase/events';
+import { getUserDocument } from '../../services/user';
+import getEnumMap from '../../services/general';
+import { getPoints } from '../../services/events';
 
 const styles = theme => ({
   root: {
@@ -65,7 +65,7 @@ class PointsPage extends React.Component {
       })
       .catch(err => console.log(err));
 
-    FirebaseUser.getUserDocument()
+    getUserDocument()
       .then(data => {
         this.setState({
           userRole: data.role_id,
@@ -90,7 +90,7 @@ class PointsPage extends React.Component {
       })
       .then(() => {
         const { pointRewardTypes } = this.state;
-        FirebaseEvent.getPoints()
+        getPoints()
           .then(pointDetails => {
             const pointsList = {
               inducteePointsList: [],

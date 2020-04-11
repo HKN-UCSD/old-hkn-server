@@ -23,7 +23,11 @@ import {
 import * as ROUTES from '../../constants/routes';
 import * as LOGO_URL from '../../images/hkn-trident.png';
 
-import * as FirebaseAuth from '../../services/Firebase/auth';
+import {
+  doCreateUserWithEmailAndPassword,
+  doSignOut,
+  doSendVerificationEmail,
+} from '../../services/auth';
 
 const styles = theme => ({
   main: {
@@ -123,13 +127,10 @@ class SignUpPage extends React.Component {
       isSignUpButtonDisabled: true,
     });
 
-    FirebaseAuth.doCreateUserWithEmailAndPassword(
-      email.trim().toLowerCase(),
-      password
-    )
+    doCreateUserWithEmailAndPassword(email.trim().toLowerCase(), password)
       .then(() => {
         this.sendVerificationEmail();
-        FirebaseAuth.doSignOut();
+        doSignOut();
       })
       .catch(error => {
         this.setState({
@@ -147,7 +148,7 @@ class SignUpPage extends React.Component {
   };
 
   sendVerificationEmail = () => {
-    FirebaseAuth.doSendVerificationEmail()
+    doSendVerificationEmail()
       .then(() => {
         this.setState({ successfulSignUpDialogOpen: true });
       })
@@ -180,7 +181,7 @@ class SignUpPage extends React.Component {
   handleSuccessfulSignUpDialogClose = () => {
     const { history } = this.props;
     this.setState({ ...INITIAL_STATE });
-    FirebaseAuth.doSignOut();
+    doSignOut();
     history.push(ROUTES.SIGN_IN);
   };
 
@@ -202,7 +203,7 @@ class SignUpPage extends React.Component {
   handleFailedSendVerificationEmailDialogClose = () => {
     this.setState({ failedSendVerificationEmailDialogOpen: false });
     const { history } = this.props;
-    FirebaseAuth.doSignOut();
+    doSignOut();
     history.push(ROUTES.SIGN_IN);
   };
 

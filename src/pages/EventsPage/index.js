@@ -4,7 +4,7 @@ import { compose } from 'recompose';
 import { Divider } from '@material-ui/core';
 import EventButtons from './eventButtons';
 
-import * as FirebaseUser from '../../services/Firebase/user';
+import { queryCurrentUserRole } from '../../services/user';
 
 const styles = theme => ({
   root: {
@@ -89,7 +89,7 @@ class EventsPage extends React.Component {
   };
 
   checkIfInductee() {
-    FirebaseUser.queryCurrentUserRole()
+    queryCurrentUserRole()
       .then(role => {
         if (role !== undefined && role !== 'Inductee') {
           this.setState({

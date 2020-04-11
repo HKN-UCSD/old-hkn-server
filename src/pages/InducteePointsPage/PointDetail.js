@@ -14,7 +14,7 @@ import {
 import { grey } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 
-import * as FirebaseEvent from '../../services/Firebase/events';
+import { getUserEvent } from '../../services/events';
 
 const styles = theme => ({
   root: {
@@ -40,7 +40,7 @@ class PointDetail extends React.Component {
   componentDidMount() {
     const { user } = this.props;
     this.setState({ officerSigns: user.officerSigns });
-    FirebaseEvent.getUserEvent(user.uid).then(events => {
+    getUserEvent(user.uid).then(events => {
       const eventNames = events.map(event => event.event_name);
       this.setState({ eventNames });
     });

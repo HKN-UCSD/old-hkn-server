@@ -17,8 +17,14 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 
-import * as FirebaseUser from '../../services/Firebase/user';
-import * as FirebaseResume from '../../services/Firebase/resume';
+import { getUserDocument } from '../../services/user';
+import {
+  getDownload,
+  uploadResume,
+  updateResumeFields,
+  deleteResume,
+  removeResumeFields,
+} from '../../services/resume';
 
 const styles = theme => ({
   root: {
@@ -97,7 +103,7 @@ class ResumePage extends React.Component {
   }
 
   componentDidMount() {
-    FirebaseUser.getUserDocument()
+    getUserDocument()
       .then(data => {
         if (data.resumeUploadTimestamp == null || data.resumeFilename == null) {
           throw Error('Resume data does not exist.');
@@ -115,7 +121,7 @@ class ResumePage extends React.Component {
 
         const path = `users/${uid}/resume/${fileName}`;
 
-        return FirebaseResume.getDownload(path);
+        return getDownload(path);
       })
       .then(url => {
         this.setState({
@@ -183,7 +189,7 @@ class ResumePage extends React.Component {
         if (!isCorrectSize) {
           throw Error('File size must be less than or equal to 1 MB.');
         }
-        return FirebaseResume.uploadResume(resumeFile);
+        return uploadResume(resumeFile);
       })
       .then(snapshot => {
         return snapshot.ref.getDownloadURL();
@@ -192,15 +198,11 @@ class ResumePage extends React.Component {
         this.setState({
           resumeDownloadURL: downloadUrl,
         });
-        return FirebaseResume.updateResumeFields(
-          resumeFile.name,
-          timestamp,
-          downloadUrl
-        );
+        return updateResumeFields(resumeFile.name, timestamp, downloadUrl);
       })
       .then(() => {
         if (uploaded && resumeFile.name !== filename) {
-          return FirebaseResume.deleteResume(filename);
+          return deleteResume(filename);
         }
         return null;
       })
@@ -249,9 +251,9 @@ class ResumePage extends React.Component {
   handleConfirmDelete = () => {
     const { filename } = this.state;
 
-    FirebaseResume.deleteResume(filename)
+    deleteResume(filename)
       .then(() => {
-        return FirebaseResume.removeResumeFields();
+        return removeResumeFields();
       })
       .then(() => {
         this.setState({

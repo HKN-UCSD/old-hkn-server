@@ -9,8 +9,8 @@ import PointDetail from './PointDetail';
 import { USER_ROLES } from '../../constants/roles';
 import * as ROUTES from '../../constants/routes';
 
-import * as FirebaseUser from '../../services/Firebase/user';
-import * as FirebaseOfficer from '../../services/Firebase/officer';
+import { queryCurrentUserRole } from '../../services/user';
+import { getInducteesInfo } from '../../services/officer';
 
 const INITIAL_STATE = {
   users: [],
@@ -49,7 +49,7 @@ class InducteePoints extends React.Component {
 
   componentDidMount() {
     const users = [];
-    FirebaseUser.queryCurrentUserRole()
+    queryCurrentUserRole()
       .then(userRole => {
         const isOfficer = userRole === USER_ROLES.OFFICER;
         this.setState({ isOfficer });
@@ -57,7 +57,7 @@ class InducteePoints extends React.Component {
       })
       .then(isOfficer => {
         if (isOfficer) {
-          FirebaseOfficer.getInducteesInfo().then(inducteeInfo => {
+          getInducteesInfo().then(inducteeInfo => {
             inducteeInfo.forEach(data => {
               const {
                 induction_points: inductionPoints,
