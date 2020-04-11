@@ -18,6 +18,12 @@ import {
   Typography,
   Divider,
   IconButton,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from '@material-ui/core';
 
 import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
@@ -37,6 +43,7 @@ import { doSignOut } from '../../services/auth';
 const INITIAL_STATES = {
   isDrawerOpen: false,
   isOfficer: false,
+  isConfirmationModalOpen: false,
 };
 
 class NavBar extends React.Component {
@@ -71,9 +78,22 @@ class NavBar extends React.Component {
     this.setState({ isDrawerOpen: false });
   };
 
+  handleLogOut = () => {
+    this.setState({
+      isConfirmationModalOpen: true,
+    });
+  };
+
+  handleClose = () => {
+    this.setState({
+      isConfirmationModalOpen: false,
+    });
+  };
+
   render() {
     const { classes, children } = this.props;
-    const { isDrawerOpen, isOfficer } = this.state;
+    const { isDrawerOpen, isOfficer, isConfirmationModalOpen } = this.state;
+
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -164,13 +184,35 @@ class NavBar extends React.Component {
           </List>
           <Divider />
           <List>
-            <ListItem button onClick={doSignOut}>
+            <ListItem button onClick={this.handleLogOut}>
               <ListItemIcon>
                 <SignOutIcon />
               </ListItemIcon>
               <ListItemText primary='Logout' />
             </ListItem>
           </List>
+
+          <Dialog
+            open={isConfirmationModalOpen}
+            onClose={this.handleClose}
+            aria-labelledby='alert-dialog-title'
+            aria-describedby='alert-dialog-description'
+          >
+            <DialogTitle id='alert-dialog-title'>Log Out?</DialogTitle>
+            <DialogContent>
+              <DialogContentText id='alert-dialog-description'>
+                Are you sure you want to log out?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={doSignOut} color='primary'>
+                Yes
+              </Button>
+              <Button onClick={this.handleClose} color='primary' autoFocus>
+                No
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Drawer>
         <main className={classes.content}>{children}</main>
       </div>
