@@ -24,18 +24,27 @@ class PointDisplay extends React.Component {
     this.state = {
       ...props,
     };
+
+    this._isMounted = false;
   }
 
   componentDidUpdate(prevProps) {
+    this._isMounted = true;
+
     this.updatePoints(prevProps);
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   updatePoints(prevProps) {
     const { points } = this.props;
     if (prevProps.points !== points) {
-      this.setState({
-        points,
-      });
+      if (this._isMounted)
+        this.setState({
+          points,
+        });
     }
   }
   // componentWillReceiveProps(newProps) { this.setState(newProps); }

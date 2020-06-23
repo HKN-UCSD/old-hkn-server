@@ -55,22 +55,27 @@ class PointsPage extends React.Component {
     super(props);
 
     this.state = { ...INITIAL_STATES };
+
+    this._isMounted = false;
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
     getEnumMap('roles')
       .then(roleEnum => {
-        this.setState({ roles: roleEnum });
+        if (this._isMounted) this.setState({ roles: roleEnum });
       })
       .catch(err => console.log(err));
 
     getCurrentUserDocument()
       .then(data => {
-        this.setState({
-          userRole: data.role_id,
-          mentorship: data.mentorship,
-          professional: data.professional,
-        });
+        if (this._isMounted)
+          this.setState({
+            userRole: data.role_id,
+            mentorship: data.mentorship,
+            professional: data.professional,
+          });
       })
       .catch(err => console.log(err));
 
@@ -85,7 +90,7 @@ class PointsPage extends React.Component {
           console.log(pointEnum);
           throw Error('Point types unavailable');
         }
-        this.setState({ pointRewardTypes: pointEnum });
+        if (this._isMounted) this.setState({ pointRewardTypes: pointEnum });
       })
       .then(() => {
         const { pointRewardTypes } = this.state;
@@ -124,13 +129,14 @@ class PointsPage extends React.Component {
             return pointsList;
           })
           .then(pointsList => {
-            this.setState({
-              inducteePoints: pointsList.inducteePointsList,
-              inducteeMentorPoints: pointsList.inducteeMentorList,
-              memberPoints: pointsList.memberPointsList,
-              memberMentorPoints: pointsList.memberMentorList,
-              totalPoints: pointsList.totals,
-            });
+            if (this._isMounted)
+              this.setState({
+                inducteePoints: pointsList.inducteePointsList,
+                inducteeMentorPoints: pointsList.inducteeMentorList,
+                memberPoints: pointsList.memberPointsList,
+                memberMentorPoints: pointsList.memberMentorList,
+                totalPoints: pointsList.totals,
+              });
           })
           .catch(err => {
             throw Error(`Update points list state error: ${err}`);
@@ -139,6 +145,10 @@ class PointsPage extends React.Component {
       .catch(err => {
         throw Error(`Points List error: ${err}`);
       });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   addDetails = (list, data) => {

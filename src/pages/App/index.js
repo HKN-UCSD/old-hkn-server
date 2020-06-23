@@ -81,6 +81,7 @@ class App extends React.Component {
             <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
             <Route exact path={ROUTES.SIGN_UP} component={SignUpPage} />
             <Route exact path={ROUTES.NEW_SIGN_UP} component={SignUpPageNew} />
+
             <Route exact path={ROUTES.HOME} component={wrappedEventsPage} />
             <Route exact path={ROUTES.POINTS} component={wrappedPointsPage} />
             <Route exact path={ROUTES.RESUME} component={wrappedResumePage} />

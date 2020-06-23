@@ -18,9 +18,13 @@ class CalendarPage extends React.Component {
       selectedEvent: null,
       view: 'calendar',
     };
+
+    this._isMounted = false;
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
     getAllEvents().then(events => {
       const calendarEvents = [];
       events.forEach(newEventParam => {
@@ -35,48 +39,29 @@ class CalendarPage extends React.Component {
         newEvent.venue = newEvent.location;
         calendarEvents.push(newEvent);
       });
-      this.setState({ events: calendarEvents });
+      if (this._isMounted) this.setState({ events: calendarEvents });
     });
+  }
 
-    // const calendarEvents = [
-    //   {
-    //     id: 'qO8nJ50tCO57hptbxNZa',
-    //     title: 'Enhanced multi-tasking model',
-    //     description:
-    //       'Pressure someone institution fund account part. Entire couple develop main.\nMeeting sea school me policy beautiful well. Agent ground so majority care born blood.',
-    //     venue: 'Lindsey Rapids',
-    //     startDate: '2020-05-16T01:30:49+00:00',
-    //     endDate: '2020-05-16T02:30:49+00:00',
-    //   },
-    //   {
-    //     id: 'mRaXeYuSCMmqMOngDl7B',
-    //     title: 'Customizable bottom-line help-desk',
-    //     description:
-    //       'Reason clear rest the lay. Customer fill change.\nCampaign member we notice include investment. Near they order particularly western life. Reflect bed offer dinner top Mr of her.',
-    //     venue: 'Frazier Station',
-    //     startDate: '2020-03-30T21:04:26+00:00',
-    //     endDate: '2020-03-30T22:04:26+00:00',
-    //   },
-    // ];
-
-    // this.setState({ events: calendarEvents });
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   toggleView() {
-    this.setState(prevState => ({
-      view: prevState.view === 'calendar' ? ' list' : 'calendar',
-    }));
+    if (this._isMounted)
+      this.setState(prevState => ({
+        view: prevState.view === 'calendar' ? ' list' : 'calendar',
+      }));
   }
 
   toggleEventClick(event) {
     const { selectedEvent } = this.state;
     if (selectedEvent != null && event.id === selectedEvent.id) {
-      this.setState({
-        selectedEvent: null,
-      });
-    } else {
-      this.setState({ selectedEvent: event });
-    }
+      if (this._isMounted)
+        this.setState({
+          selectedEvent: null,
+        });
+    } else if (this._isMounted) this.setState({ selectedEvent: event });
   }
 
   render() {

@@ -35,15 +35,24 @@ class PointDetail extends React.Component {
       eventNames: [],
       officerSigns: [],
     };
+
+    this._isMounted = false;
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
     const { user } = this.props;
-    this.setState({ officerSigns: user.officerSigns });
+    if (this._isMounted) this.setState({ officerSigns: user.officerSigns });
+
     getUserEvent(user.uid).then(events => {
       const eventNames = events.map(event => event.event_name);
-      this.setState({ eventNames });
+      if (this._isMounted) this.setState({ eventNames });
     });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {

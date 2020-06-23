@@ -47,15 +47,21 @@ class EventsPage extends React.Component {
     super(props);
 
     this.state = { ...INITIAL_STATE };
+
+    this._isMounted = false;
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
     this.resizeFB();
     this.checkIfInductee();
     window.addEventListener('resize', this.resizeFB);
   }
 
   componentWillUnmount() {
+    this._isMounted = false;
+
     window.removeEventListener('resize', this.resizeFB);
   }
 
@@ -75,10 +81,11 @@ class EventsPage extends React.Component {
       fbWidth = 180;
     }
 
-    this.setState({
-      height: fbHeight,
-      width: fbWidth,
-    });
+    if (this._isMounted)
+      this.setState({
+        height: fbHeight,
+        width: fbWidth,
+      });
   };
 
   getPagePluginURL = () => {
@@ -95,9 +102,10 @@ class EventsPage extends React.Component {
     queryCurrentUserRole()
       .then(role => {
         if (role !== undefined && role !== 'Inductee') {
-          this.setState({
-            buttons: <EventButtons />,
-          });
+          if (this._isMounted)
+            this.setState({
+              buttons: <EventButtons />,
+            });
         }
       })
       .catch(error => {

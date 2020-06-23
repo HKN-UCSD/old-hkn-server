@@ -44,14 +44,18 @@ class InducteePoints extends React.Component {
     this.state = {
       ...INITIAL_STATE,
     };
+
+    this._isMounted = false;
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
     const users = [];
     queryCurrentUserRole()
       .then(userRole => {
         const isOfficer = userRole === USER_ROLES.OFFICER;
-        this.setState({ isOfficer });
+        if (this._isMounted) this.setState({ isOfficer });
         return isOfficer;
       })
       .then(isOfficer => {
@@ -85,10 +89,14 @@ class InducteePoints extends React.Component {
                 officerSigns,
               });
             });
-            this.setState({ users });
+            if (this._isMounted) this.setState({ users });
           });
         }
       });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {
