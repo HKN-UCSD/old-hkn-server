@@ -4,10 +4,36 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import Table from '../Table';
 
+const timeSort = (timeA, timeB) => {
+  return moment(timeA).diff(moment(timeB));
+};
+
 const columns = [
   { title: 'Event Name', field: 'title' },
-  { title: 'Start Time', field: 'startDateString' },
-  { title: 'End Time', field: 'endDateString' },
+  {
+    title: 'Start Time',
+    field: 'startDateString',
+    customSort: (eventA, eventB) => {
+      const { startDate: startDateA } = eventA;
+      const { startDate: startDateB } = eventB;
+
+      return timeSort(startDateA, startDateB);
+    },
+  },
+  {
+    title: 'End Time',
+    field: 'endDateString',
+    customSort: (eventA, eventB) => {
+      const {
+        eventA: { endDate: endDateA },
+      } = eventA;
+      const {
+        eventB: { endDate: endDateB },
+      } = eventB;
+
+      timeSort(endDateA, endDateB);
+    },
+  },
 ];
 
 function EventList({ events, handleEventClick }) {
@@ -25,8 +51,8 @@ function EventList({ events, handleEventClick }) {
         'dddd, MMMM Do YYYY, h:mm:ss a'
       ),
       venue: events[i].venue,
-      // startDate: events[i].startDate,
-      // endDate: events[i].endDate,
+      startDate: events[i].startDate,
+      endDate: events[i].endDate,
     };
     listEvents.push(listEvent);
   }
@@ -37,7 +63,10 @@ function EventList({ events, handleEventClick }) {
       data={listEvents}
       title='Events'
       onRowClick={(event, rowData) => handleEventClick(rowData)}
-      options={{ filtering: true }}
+      options={{
+        filtering: true,
+        sorting: true,
+      }}
     />
   );
 }
