@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import Table from '../Table';
 
-const timeSort = (timeA, timeB) => {
-  return moment(timeA).diff(moment(timeB));
+const dateTimeSort = (dateTimeA, dateTimeB) => {
+  return moment(dateTimeA).diff(moment(dateTimeB));
 };
 
 const columns = [
@@ -14,24 +14,20 @@ const columns = [
     title: 'Start Time',
     field: 'startDateString',
     customSort: (eventA, eventB) => {
-      const { startDate: startDateA } = eventA;
-      const { startDate: startDateB } = eventB;
+      const { startDate: startDateTimeA } = eventA;
+      const { startDate: startDateTimeB } = eventB;
 
-      return timeSort(startDateA, startDateB);
+      return dateTimeSort(startDateTimeA, startDateTimeB);
     },
   },
   {
     title: 'End Time',
     field: 'endDateString',
     customSort: (eventA, eventB) => {
-      const {
-        eventA: { endDate: endDateA },
-      } = eventA;
-      const {
-        eventB: { endDate: endDateB },
-      } = eventB;
+      const { endDate: endDateTimeA } = eventA;
+      const { endDate: endDateTimeB } = eventB;
 
-      timeSort(endDateA, endDateB);
+      return dateTimeSort(endDateTimeA, endDateTimeB);
     },
   },
 ];
