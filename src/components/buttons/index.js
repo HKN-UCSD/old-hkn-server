@@ -3,7 +3,13 @@ import PropTypes from 'prop-types';
 
 import { Button as MuiButton } from '@material-ui/core';
 
-function Button({ text, primary, secondary, positive, negative, ...props }) {
+export default function Button({
+  primary,
+  secondary,
+  positive,
+  negative,
+  ...props
+}) {
   const buttonProps = {};
   if (primary) {
     buttonProps.variant = 'contained';
@@ -17,15 +23,10 @@ function Button({ text, primary, secondary, positive, negative, ...props }) {
     buttonProps.color = 'secondary';
   }
 
-  return (
-    <MuiButton {...props} {...buttonProps}>
-      {text}
-    </MuiButton>
-  );
+  return <MuiButton {...props} {...buttonProps} />;
 }
 
 Button.propTypes = {
-  text: PropTypes.string.isRequired,
   primary: PropTypes.bool,
   secondary: PropTypes.bool,
   positive: PropTypes.bool,
