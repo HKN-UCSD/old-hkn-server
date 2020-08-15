@@ -24,6 +24,8 @@ import {
   OfficerRoutingPermission,
 } from '@HOCs/RoutingPermissions';
 
+import { Snackbar } from '@SharedComponents';
+
 const INITIAL_STATES = {
   userClaims: null,
   isLoading: true,
@@ -78,6 +80,11 @@ class App extends React.Component {
       <UserContext.Provider value={userClaims}>
         <BrowserRouter>
           <Switch>
+            <Route
+              exact
+              path={ROUTES.TEST}
+              render={props => <Snackbar {...props} />}
+            />
             <Route
               exact
               path={ROUTES.SIGN_IN}

@@ -11,6 +11,7 @@ import { ButtonWithConfirmationModal, ButtonWithAlertModal } from './modals';
 import NavBar from './NavBar';
 import Table from './Table';
 import Tags from './Tags';
+import Snackbar from './SnackBar';
 
 export {
   Button,
@@ -25,4 +26,5 @@ export {
   NavBar,
   Table,
   Tags,
+  Snackbar,
 };
