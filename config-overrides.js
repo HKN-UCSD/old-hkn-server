@@ -1,4 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
+/* eslint-disable */
 const path = require('path');
 
 const { useBabelRc, override, addWebpackAlias } = require('customize-cra');

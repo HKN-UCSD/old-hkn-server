@@ -5,6 +5,8 @@
   },
   "extends": [
     "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
     "airbnb",
     "prettier",
     "prettier/react"
@@ -21,7 +23,7 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "plugins": ["react"],
+  "plugins": ["react", "@typescript-eslint"],
   "rules": {
     "react/jsx-filename-extension": "off",
     "react/jsx-props-no-spreading": "off",
