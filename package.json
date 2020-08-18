@@ -33,6 +33,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "recompose": "^0.30.0",
+    "typescript": "^3.9.7",
     "yup": "^0.28.5"
   },
   "scripts": {
@@ -53,6 +54,8 @@
   ],
   "devDependencies": {
     "@material-ui/codemod": "^4.5.0",
+    "@types/react": "^16.9.46",
+    "@types/react-dom": "^16.9.8",
     "cypress": "^4.11.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.2.0",
