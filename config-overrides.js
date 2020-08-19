@@ -5,8 +5,7 @@ const { useBabelRc, override, addWebpackAlias } = require('customize-cra');
 const rewireReactHotLoader = require('react-app-rewire-hot-loader');
 
 function hotreload(config, env) {
-  config = rewireReactHotLoader(config, env);
-  return config;
+  return rewireReactHotLoader(config, env);
 }
 
 module.exports = override(
