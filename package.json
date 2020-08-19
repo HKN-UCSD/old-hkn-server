@@ -46,7 +46,7 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test --passWithNoTests",
     "cypress": "npx cypress run",
-    "lint": "eslint --ignore-path .gitignore --fix ./src/**/*.{js,ts,tsx}",
+    "lint": "eslint --fix './src/**/*.{js,ts,tsx}'",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
   },
