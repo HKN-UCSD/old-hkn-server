@@ -62,7 +62,9 @@
     "eslint-plugin-react": "^7.20.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.10",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "react-app-rewire-hot-loader": "^2.0.1",
+    "react-hot-loader": "^4.12.21"
   },
   "husky": {
     "hooks": {

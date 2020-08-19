@@ -2,8 +2,15 @@
 const path = require('path');
 
 const { useBabelRc, override, addWebpackAlias } = require('customize-cra');
+const rewireReactHotLoader = require('react-app-rewire-hot-loader');
+
+function hotreload(config, env) {
+  config = rewireReactHotLoader(config, env);
+  return config;
+}
 
 module.exports = override(
+  hotreload,
   useBabelRc(),
   addWebpackAlias({
     '@Constants': path.resolve(__dirname, './src/constants'),
