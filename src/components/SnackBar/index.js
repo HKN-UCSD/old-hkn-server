@@ -20,25 +20,27 @@ export default function Snackbar({
 
   return (
     <MuiSnackbar
+
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'left',
       }}
 
+
+
       open={open}
 
-      autoHideDuration={Snackbar.duration}
+      autoHideDuration={duration}
       onClose={handleClose}
-      message={Snackbar.message}
 
-    /*
-    action={
-      <React.Fragment>
-        <Alert onClose={handleClose} variant="filled" severity={Snackbar.alertLevel}>
-          {Snackbar.message}
-        </Alert>
-      </React.Fragment>
-    }*/
+
+      action={
+        <React.Fragment>
+          <Alert onClose={handleClose} variant="filled" severity={alertLevel} >
+            {message}
+          </Alert>
+        </React.Fragment>
+      }
     />
   );
 }
