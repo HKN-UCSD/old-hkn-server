@@ -7,7 +7,7 @@ class ApiConfigStoreClass {
     // TODO: load this from a config instead
     basePath:
       process.env.NODE_ENV === 'development'
-        ? 'http://localhost:3000'
+        ? 'http://localhost:3001'
         : 'http://dev.api.hknucsd.com',
   };
 
