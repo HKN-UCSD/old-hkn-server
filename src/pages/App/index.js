@@ -25,6 +25,7 @@ import {
   InducteeRoutingPermission,
   OfficerRoutingPermission,
 } from '@HOCs/RoutingPermissions';
+import ApiConfigStore from '@Services/ApiConfigStore';
 
 const INITIAL_STATES = {
   userClaims: null,
@@ -42,7 +43,9 @@ class App extends React.Component {
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         const tokenResult = await user.getIdTokenResult();
-        const { claims } = tokenResult;
+        const { claims, token } = tokenResult;
+
+        ApiConfigStore.setToken(token);
 
         this.setState({
           userClaims: {
