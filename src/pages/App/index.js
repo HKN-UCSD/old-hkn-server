@@ -29,6 +29,7 @@ import ApiConfigStore from '@Services/ApiConfigStore';
 
 const INITIAL_STATES = {
   userClaims: null,
+  userToken: null,
   isLoading: true,
 };
 
@@ -52,11 +53,13 @@ class App extends React.Component {
             userId: claims.user_id,
             userRoles: getRolesFromClaims(claims),
           },
+          userToken: token,
           isLoading: false,
         });
       } else {
         this.setState({
           userClaims: null,
+          userToken: null,
           isLoading: false,
         });
       }
@@ -64,11 +67,14 @@ class App extends React.Component {
   }
 
   setClaims = claims => {
+    const { userToken } = this.state;
+
     this.setState({
       userClaims: {
         userId: claims.user_id,
         userRoles: getRolesFromClaims(claims),
       },
+      userToken,
     });
   };
 
