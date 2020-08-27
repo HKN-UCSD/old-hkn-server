@@ -46,8 +46,6 @@ class App extends React.Component {
         const tokenResult = await user.getIdTokenResult();
         const { claims, token } = tokenResult;
 
-        ApiConfigStore.setToken(token);
-
         this.setState({
           userClaims: {
             userId: claims.user_id,
@@ -69,12 +67,13 @@ class App extends React.Component {
   setClaims = claims => {
     const { userToken } = this.state;
 
+    ApiConfigStore.setToken(userToken);
+
     this.setState({
       userClaims: {
         userId: claims.user_id,
         userRoles: getRolesFromClaims(claims),
       },
-      userToken,
     });
   };
 
