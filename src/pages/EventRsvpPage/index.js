@@ -8,7 +8,7 @@ import styles from './styles';
 
 import HKN_TRIDENT_LOGO from '@Images/hkn-trident.png';
 import { Loading } from '@SharedComponents';
-import { getEventById } from '@Services/events';
+import { getEventById, rsvpToEvent } from '@Services/ApiEvents';
 
 class EventRsvpPage extends React.Component {
   constructor(props) {
@@ -39,7 +39,8 @@ class EventRsvpPage extends React.Component {
   }
 
   handleSubmit = (values, setSubmitting) => {
-    console.log(values);
+    const { eventId } = this.state;
+    rsvpToEvent(eventId, values);
 
     setSubmitting(false);
   };

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 
 import EventEditForm from './components/EventEditForm';
 
-import { getEventById, setEventDetails } from '@Services/events';
+import { setEventDetails } from '@Services/events';
+import { getEventById } from '@Services/ApiEvents';
 
 class EventEditPage extends React.Component {
   constructor(props) {
