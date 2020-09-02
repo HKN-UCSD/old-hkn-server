@@ -2,22 +2,21 @@ import {
   UserApi,
   UserControllerGetUserRoleRequest,
   UserControllerGetUserProfileRequest,
+  UserControllerCreateUserRequest,
+  UserControllerGetMultipleUsersRequest,
+  UserControllerUpdateUserProfileRequest,
 } from './api/apis/UserApi';
-import { AppUserRolesResponse, AppUserProfileResponse } from './api/models';
-import ApiConfigStore from './ApiConfigStore';
+import {
+  AppUserPostRequest,
+  AppUserResponse,
+  AppUserRolesResponse,
+  AppUserProfileResponse,
+  MultipleAppUserResponse,
+  MultipleUserNameResponse,
+  AppUserNameResponse,
+} from './api/models';
 import { Configuration } from './api/runtime';
-
-export async function getUserRole(
-  userID: number
-): Promise<AppUserRolesResponse> {
-  const apiConfig: Configuration = ApiConfigStore.getApiConfig();
-  const userApi = new UserApi(apiConfig);
-  const request: UserControllerGetUserRoleRequest = {
-    userID,
-  };
-
-  return userApi.userControllerGetUserRole(request);
-}
+import ApiConfigStore from './ApiConfigStore';
 
 export async function getUserProfile(
   userID: number
@@ -29,4 +28,70 @@ export async function getUserProfile(
   };
 
   return userApi.userControllerGetUserProfile(request);
+}
+
+export async function getMultipleUsers(
+  queryParams: UserControllerGetMultipleUsersRequest
+): Promise<MultipleAppUserResponse | MultipleUserNameResponse> {
+  const apiConfig: Configuration = ApiConfigStore.getApiConfig();
+  const userApi = new UserApi(apiConfig);
+
+  return userApi.userControllerGetMultipleUsers(queryParams);
+}
+
+export function processMultipleUsers(
+  multipleUserResponse: MultipleAppUserResponse | MultipleUserNameResponse
+) {
+  const { users } = multipleUserResponse;
+  const userKeys = Object.keys(users[0]);
+
+  if (users.length === 0) {
+    return [];
+  }
+  if (
+    userKeys.length === 2 &&
+    userKeys.includes('firstName') &&
+    userKeys.includes('lastName')
+  ) {
+    return users as AppUserNameResponse[];
+  }
+  return users as AppUserResponse[];
+}
+
+export async function createNewUser(
+  appUserPostRequest: AppUserPostRequest
+): Promise<AppUserResponse> {
+  const apiConfig: Configuration = ApiConfigStore.getApiConfig();
+  const userApi = new UserApi(apiConfig);
+  const request: UserControllerCreateUserRequest = {
+    appUserPostRequest,
+  };
+
+  return userApi.userControllerCreateUser(request);
+}
+
+export async function updateUserProfile(
+  userID: number,
+  appUserPostRequest: AppUserPostRequest
+) {
+  const apiConfig: Configuration = ApiConfigStore.getApiConfig();
+  const userApi = new UserApi(apiConfig);
+  const request: UserControllerUpdateUserProfileRequest = {
+    userID,
+    appUserPostRequest,
+  };
+
+  return userApi.userControllerUpdateUserProfile(request);
+}
+
+export async function getUserRole(
+  userID: number
+): Promise<AppUserRolesResponse> {
+  const apiConfig: Configuration = ApiConfigStore.getApiConfig();
+  const userApi = new UserApi(apiConfig);
+  const request: UserControllerGetUserRoleRequest = {
+    userID,
+  };
+
+  return userApi.userControllerGetUserRole(request);
 }

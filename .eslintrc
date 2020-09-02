@@ -41,9 +41,10 @@
         "js": "never",
         "jsx": "never",
         "ts": "never",
-        "tsx": "never",
+        "tsx": "never"
       }
     ],
+    "import/prefer-default-export": 0,
     "import/order": [
       "error",
       {
