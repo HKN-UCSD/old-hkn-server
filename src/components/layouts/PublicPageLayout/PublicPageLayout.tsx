@@ -17,7 +17,9 @@ function PublicPageLayout(props: PublicPageLayoutProps): JSX.Element {
       justify='center'
       alignItems='center'
     >
-      <Grid item>{children}</Grid>
+      <Grid item className={classes.children}>
+        {children}
+      </Grid>
     </Grid>
   );
 }

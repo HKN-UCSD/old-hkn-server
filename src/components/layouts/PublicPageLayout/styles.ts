@@ -9,6 +9,9 @@ const styles = (theme: Theme) => ({
       marginTop: '3vh',
     },
   },
+  children: {
+    margin: theme.spacing(2),
+  },
 });
 
 export default styles;
