@@ -37,7 +37,6 @@ function EventDetailsComponent(props) {
     rsvp: rsvpURL,
   };
 
-  const eventHosts = hosts.map(host => host.id);
   const eventType = type || 'Event';
 
   return (
@@ -64,9 +63,9 @@ function EventDetailsComponent(props) {
               <Grid item xs={6}>
                 <Typography className={classes.hosts} variant='h6'>
                   Hosts:{' '}
-                  {eventHosts.map(host => (
-                    <Typography key={host} className={classes.hostName}>
-                      {host}
+                  {hosts.map(host => (
+                    <Typography key={host.id} className={classes.hostName}>
+                      {`${host.firstName} ${host.lastName}`}
                     </Typography>
                   ))}
                 </Typography>

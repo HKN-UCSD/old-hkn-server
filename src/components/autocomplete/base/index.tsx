@@ -8,6 +8,7 @@ type BaseAutoCompleteProp = {
   name: string;
   label: string;
   options: Array<any>;
+  getOptionSelected?: (option: any, value?: any) => any;
   getOptionLabel?: (option: any) => any;
   multiple?: boolean;
   filterSelectedOptions?: boolean;
@@ -18,6 +19,7 @@ export const BaseAutocomplete = ({
   name,
   label,
   options,
+  getOptionSelected,
   getOptionLabel,
   multiple = false,
   filterSelectedOptions = false,
@@ -28,6 +30,7 @@ export const BaseAutocomplete = ({
       name={name}
       options={options}
       getOptionLabel={getOptionLabel}
+      getOptionSelected={getOptionSelected}
       component={Autocomplete}
       multiple={multiple}
       filterSelectedOptions={filterSelectedOptions}
@@ -44,6 +47,9 @@ BaseAutocomplete.defaultProps = {
   filterSelectedOptions: false,
   fullWidth: false,
   getOptionLabel: () => {
+    return null;
+  },
+  getOptionSelected: () => {
     return null;
   },
 };

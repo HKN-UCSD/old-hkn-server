@@ -24,9 +24,9 @@ export const OfficerNameAutocomplete = (props: OfficerAutocompleteProp) => {
     getMultipleUsers({
       officers: true,
       names: true,
-    }).then(officerNameArr =>
-      setOfficerNames(processMultipleUsers(officerNameArr))
-    );
+    }).then(officerNameArr => {
+      setOfficerNames(processMultipleUsers(officerNameArr));
+    });
   }, []);
 
   return (
@@ -37,6 +37,11 @@ export const OfficerNameAutocomplete = (props: OfficerAutocompleteProp) => {
       filterSelectedOptions
       options={officerNames}
       getOptionLabel={option => `${option.firstName} ${option.lastName}`}
+      getOptionSelected={(option, value) =>
+        option.id === value.id &&
+        option.firstName === value.firstName &&
+        option.lastName === value.lastName
+      }
       fullWidth={fullWidth}
     />
   );
