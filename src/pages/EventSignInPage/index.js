@@ -7,8 +7,9 @@ import EventSignInForm from './components/EventSignInForm';
 import styles from './styles';
 
 import HKN_TRIDENT_LOGO from '@Images/hkn-trident.png';
-import { Loading } from '@SharedComponents';
+import { Loading, PublicPageLayout } from '@SharedComponents';
 import { getEventById, signInToEvent } from '@Services/EventService';
+
 
 class EventSignInPage extends React.Component {
   constructor(props) {
@@ -53,7 +54,7 @@ class EventSignInPage extends React.Component {
       eventInfo == null ? (
         <Loading />
       ) : (
-        <div className={classes.root}>
+        <PublicPageLayout>
           <Card className={classes.eventSignInCard}>
             <Grid container direction='column' alignItems='center' spacing={3}>
               <Grid item>
@@ -88,7 +89,7 @@ class EventSignInPage extends React.Component {
               </Grid>
             </Grid>
           </Card>
-        </div>
+        </PublicPageLayout>
       );
 
     return EventSignIn;

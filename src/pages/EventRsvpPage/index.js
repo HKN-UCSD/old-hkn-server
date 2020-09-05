@@ -7,8 +7,9 @@ import EventRsvpForm from './components/EventRsvpForm';
 import styles from './styles';
 
 import HKN_TRIDENT_LOGO from '@Images/hkn-trident.png';
-import { Loading } from '@SharedComponents';
+import { Loading, PublicPageLayout } from '@SharedComponents';
 import { getEventById, rsvpToEvent } from '@Services/EventService';
+
 
 class EventRsvpPage extends React.Component {
   constructor(props) {
@@ -53,7 +54,7 @@ class EventRsvpPage extends React.Component {
       eventInfo == null ? (
         <Loading />
       ) : (
-        <div className={classes.root}>
+        <PublicPageLayout>
           <Card className={classes.eventRsvpCard}>
             <Grid container direction='column' alignItems='center' spacing={3}>
               <Grid item>
@@ -88,7 +89,7 @@ class EventRsvpPage extends React.Component {
               </Grid>
             </Grid>
           </Card>
-        </div>
+        </PublicPageLayout>
       );
 
     return EventRsvp;
