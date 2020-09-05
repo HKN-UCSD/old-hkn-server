@@ -46,7 +46,3 @@ export const OfficerNameAutocomplete = (props: OfficerAutocompleteProp) => {
     />
   );
 };
-
-OfficerNameAutocomplete.defaultProps = {
-  fullWidth: false,
-};
