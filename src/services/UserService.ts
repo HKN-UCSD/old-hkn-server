@@ -39,19 +39,22 @@ export async function getMultipleUsers(
   return userApi.userControllerGetMultipleUsers(queryParams);
 }
 
-export function processMultipleUsers(
+export function getUserNames(
   multipleUserResponse: MultipleAppUserResponse | MultipleUserNameResponse
 ) {
   const { users } = multipleUserResponse;
-  const userKeys = Object.keys(users[0]);
 
   if (users.length === 0) {
     return [];
   }
+
+  const userKeys = Object.keys(users[0]);
+
   if (
-    userKeys.length === 2 &&
+    userKeys.length === 3 &&
     userKeys.includes('firstName') &&
-    userKeys.includes('lastName')
+    userKeys.includes('lastName') &&
+    userKeys.includes('id')
   ) {
     return users as AppUserNameResponse[];
   }

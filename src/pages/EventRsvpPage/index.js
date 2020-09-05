@@ -8,7 +8,7 @@ import styles from './styles';
 
 import HKN_TRIDENT_LOGO from '@Images/hkn-trident.png';
 import { Loading } from '@SharedComponents';
-import { getEventById, rsvpToEvent } from '@Services/ApiEvents';
+import { getEventById, rsvpToEvent } from '@Services/EventService';
 
 class EventRsvpPage extends React.Component {
   constructor(props) {

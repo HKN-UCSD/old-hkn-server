@@ -4,7 +4,7 @@ import { Card } from '@material-ui/core';
 
 import EventEditForm from './components/EventEditForm';
 
-import { getEventById, updateEvent } from '@Services/ApiEvents';
+import { getEventById, updateEvent } from '@Services/EventService';
 
 class EventEditPage extends React.Component {
   constructor(props) {

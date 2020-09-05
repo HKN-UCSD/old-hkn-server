@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import GenericDropdownField from '@SharedComponents/dropdowns/base';
-import EVENT_STATUS from '@Constants/eventStatus';
+import { EventStatusEnum } from '@Services/EventService';
 
 type EventStatusFieldProp = {
   name: string;
@@ -18,7 +18,7 @@ const EventStatusDropdownField = (props: EventStatusFieldProp) => {
       label={label}
       fullWidth={fullWidth}
       capitalizeLabel
-      selections={Object.values(EVENT_STATUS)}
+      selections={Object.values(EventStatusEnum)}
     />
   );
 };

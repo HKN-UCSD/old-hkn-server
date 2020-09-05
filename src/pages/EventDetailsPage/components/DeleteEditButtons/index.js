@@ -9,7 +9,7 @@ import styles from './styles';
 
 import { Button, ButtonWithConfirmationModal } from '@SharedComponents';
 import * as ROUTES from '@Constants/routes';
-import { deleteEvent } from '@Services/ApiEvents';
+import { deleteEvent } from '@Services/EventService';
 
 const DeleteEditButtons = props => {
   const { classes, eventId } = props;

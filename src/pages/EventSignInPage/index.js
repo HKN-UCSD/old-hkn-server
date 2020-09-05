@@ -8,7 +8,7 @@ import styles from './styles';
 
 import HKN_TRIDENT_LOGO from '@Images/hkn-trident.png';
 import { Loading } from '@SharedComponents';
-import { getEventById, signInToEvent } from '@Services/ApiEvents';
+import { getEventById, signInToEvent } from '@Services/EventService';
 
 class EventSignInPage extends React.Component {
   constructor(props) {

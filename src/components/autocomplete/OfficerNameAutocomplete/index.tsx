@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { BaseAutocomplete } from '../base';
 
-import { getMultipleUsers, processMultipleUsers } from '@Services/ApiUsers';
+import { getMultipleUsers, getUserNames } from '@Services/UserService';
 
 type OfficerNameData = {
   id: number;
@@ -25,7 +25,7 @@ export const OfficerNameAutocomplete = (props: OfficerAutocompleteProp) => {
       officers: true,
       names: true,
     }).then(officerNameArr => {
-      setOfficerNames(processMultipleUsers(officerNameArr));
+      setOfficerNames(getUserNames(officerNameArr));
     });
   }, []);
 

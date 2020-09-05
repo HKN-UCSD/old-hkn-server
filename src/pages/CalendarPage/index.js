@@ -7,7 +7,7 @@ import EventCard from './components/EventCard';
 import EventList from './components/EventList';
 import styles from './styles';
 
-import { getAllEvents } from '@Services/ApiEvents';
+import { getAllEvents } from '@Services/EventService';
 
 class CalendarPage extends React.Component {
   constructor(props) {
