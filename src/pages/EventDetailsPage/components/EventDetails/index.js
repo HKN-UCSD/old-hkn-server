@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Card, Button, Grid } from '@material-ui/core';
+import { Typography, Button, Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
@@ -11,7 +11,7 @@ import Links from './Links';
 import styles from './styles';
 
 import { OfficerRenderPermission } from '@HOCs/RenderPermissions';
-import { Tags } from '@SharedComponents';
+import { Tags, Card } from '@SharedComponents';
 import * as ROUTES from '@Constants/routes';
 
 function EventDetailsComponent(props) {
