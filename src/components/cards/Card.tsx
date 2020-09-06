@@ -8,10 +8,9 @@ export interface CardProps {
   children: JSX.Element;
 }
 
-export function Card(props: CardProps): JSX.Element {
-  const { children } = props;
+export function Card({ children, ...props }: CardProps): JSX.Element {
   return (
-    <MuiCard elevation={3}>
+    <MuiCard elevation={3} {...props}>
       <MuiCardContent>{children}</MuiCardContent>
     </MuiCard>
   );
