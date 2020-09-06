@@ -5,9 +5,14 @@ import { withStyles } from '@material-ui/core/styles';
 import SignUpForm from './components/SignUpForm';
 import styles from './styles';
 
-import { PublicPageLayout } from '@SharedComponents/layouts';
-import { createUserAccountFromSignup } from '@Services/auth';
 import HKN_TRIDENT_LOGO from '@Images/hkn-trident.png';
+import { PublicPageLayout } from '@SharedComponents/layouts';
+import { createNewUser } from '@Services/AuthService';
+import {
+  doSignInWithEmailAndPassword,
+  doSendVerificationEmail,
+  doSignOut,
+} from '@Services/auth';
 
 const INITIAL_STATE = {};
 
@@ -19,13 +24,27 @@ class SignUpPage extends React.Component {
   }
 
   handleSubmit = async (values, setSubmitting) => {
+    const { email, firstName, lastName, major, gradYear, password } = values;
     const signupSubmission = {
-      ...values,
+      email,
+      firstName,
+      lastName,
+      major,
+      password,
+      graduationYear: gradYear.toString(),
     };
 
-    await createUserAccountFromSignup(signupSubmission);
+    try {
+      await createNewUser(signupSubmission);
+      await doSignInWithEmailAndPassword(email, password, false);
+      await doSendVerificationEmail();
+      await doSignOut();
 
-    setSubmitting(false);
+      setSubmitting(false);
+    } catch {
+      // TODO: Let user know that an account has already been made with the email they provided
+      setSubmitting(false);
+    }
   };
 
   render() {
