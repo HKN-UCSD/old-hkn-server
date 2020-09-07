@@ -9,11 +9,17 @@ export default {
 } as Meta;
 
 const Template: Story<CardProps> = args => {
-  const { children } = args;
-  return <Card>{children}</Card>;
+  const { children, title } = args;
+  return <Card title={title}>{children}</Card>;
 };
 
 export const SampleCard = Template.bind({});
 SampleCard.args = {
-  children: <h1>Put stuff here!</h1>,
+  children: <h3>Put stuff here!</h3>,
+};
+
+export const SampleCardWithTitle = Template.bind({});
+SampleCardWithTitle.args = {
+  children: <h3>This is the body</h3>,
+  title: 'Title',
 };
