@@ -7,9 +7,7 @@ import styles from './styles';
 
 import { Card } from '@SharedComponents';
 import { PublicPageLayout } from '@SharedComponents/layouts';
-import { createUserAccountFromSignup } from '@Services/auth';
 import HKN_TRIDENT_LOGO from '@Images/hkn-trident.png';
-import { PublicPageLayout } from '@SharedComponents/layouts';
 import { createNewUser } from '@Services/AuthService';
 import {
   doSignInWithEmailAndPassword,
