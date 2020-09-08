@@ -36,15 +36,28 @@ class SignUpPage extends React.Component {
 
     try {
       await createNewUser(signupSubmission);
-      await doSignInWithEmailAndPassword(email, password, false);
-      await doSendVerificationEmail();
-      await doSignOut();
-
-      setSubmitting(false);
     } catch {
-      // TODO: Let user know that an account has already been made with the email they provided
+      console.log('Create new user failed');
       setSubmitting(false);
+      return;
     }
+
+    try {
+      await doSignInWithEmailAndPassword(email, password, false);
+    } catch {
+      console.log('Sign in failed');
+      setSubmitting(false);
+      return;
+    }
+
+    try {
+      await doSendVerificationEmail();
+    } catch {
+      console.log('Send verification email failed.');
+    }
+
+    await doSignOut();
+    setSubmitting(false);
   };
 
   render() {
