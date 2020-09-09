@@ -79,12 +79,12 @@ function App(): JSX.Element {
           <Route
             exact
             path={ROUTES.EVENT_SIGN_IN}
-            render={props => <EventSignInPage {...props} />}
+            render={() => <EventSignInPage />}
           />
           <Route
             exact
             path={ROUTES.EVENT_RSVP}
-            render={props => <EventRsvpPage {...props} />}
+            render={() => <EventRsvpPage />}
           />
           <Route
             exact
