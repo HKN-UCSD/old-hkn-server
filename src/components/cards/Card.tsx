@@ -8,7 +8,7 @@ import {
 export interface CardProps {
   title?: string;
   children: JSX.Element;
-  className: string;
+  className?: string;
 }
 
 export function Card({ children, title, className }: CardProps): JSX.Element {
