@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
-import { Avatar, Card, Typography, Grid } from '@material-ui/core';
+import { Avatar, Typography, Grid } from '@material-ui/core';
 
 import EventRsvpForm from './components/EventRsvpForm';
 import useStyles from './styles';
 
 import HKN_TRIDENT_LOGO from '@Images/hkn-trident.png';
-import { Loading, PublicPageLayout } from '@SharedComponents';
+import { Loading, Card, PublicPageLayout } from '@SharedComponents';
 import { getEventById, rsvpToEvent } from '@Services/EventService';
 import { EventResponse, AppUserEventRequest } from '@Services/api/models';
 

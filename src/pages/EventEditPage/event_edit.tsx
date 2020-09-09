@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router';
-import { Card } from '@material-ui/core';
 
 import EventEditForm from './components/EventEditForm';
 
+import { Card } from '@SharedComponents';
 import { getEventById, updateEvent } from '@Services/EventService';
 import { EventResponse, EventRequest } from '@Services/api/models';
 

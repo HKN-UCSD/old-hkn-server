@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Card, CardContent, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 import useStyles from './styles';
 
-import { FormLayout } from '@SharedComponents';
+import { Card, FormLayout } from '@SharedComponents';
 import {
   getAccountSection,
   getPersonalInfoSection,
@@ -40,14 +40,12 @@ function ProfilePage(): JSX.Element {
   return (
     <Grid container className={classes.root}>
       <Card className={classes.paper}>
-        <CardContent>
-          <FormLayout
-            readOnly
-            editEndpoint={PROFILE_EDIT_WITH_ID(profile.id)}
-            title='Profile'
-            sections={sections}
-          />
-        </CardContent>
+        <FormLayout
+          readOnly
+          editEndpoint={PROFILE_EDIT_WITH_ID(profile.id)}
+          title='Profile'
+          sections={sections}
+        />
       </Card>
     </Grid>
   );

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useParams, useHistory } from 'react-router';
-import { Card, CardContent, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 
 import schema from './schema';
 import useStyles from './styles';
 
-import { FormLayout } from '@SharedComponents';
+import { Card, FormLayout } from '@SharedComponents';
 import {
   getAccountSection,
   getPersonalInfoSection,
@@ -66,15 +66,13 @@ function ProfileEditPage(): JSX.Element {
         <Form>
           <Grid container className={classes.root}>
             <Card className={classes.paper}>
-              <CardContent>
-                <FormLayout
-                  title='Profile'
-                  sections={sections}
-                  onSubmit={submitForm}
-                  onCancel={handleCancel}
-                  submitButtonText='Save'
-                />
-              </CardContent>
+              <FormLayout
+                title='Profile'
+                sections={sections}
+                onSubmit={submitForm}
+                onCancel={handleCancel}
+                submitButtonText='Save'
+              />
             </Card>
           </Grid>
         </Form>
