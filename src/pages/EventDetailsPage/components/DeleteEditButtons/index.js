@@ -25,16 +25,21 @@ const DeleteEditButtons = props => {
   };
 
   const confirmButtonProps = {
-    name: 'Yes',
-    onClick: handleConfirmDelete,
-    to: ROUTES.CALENDAR,
-    component: Link,
-    positive: true,
+    buttonName: 'Yes',
+    actionFunc: handleConfirmDelete,
+    styleProps: {
+      primary: true,
+      positive: true,
+    },
+    urlToNavigate: ROUTES.CALENDAR,
   };
 
   const cancelButtonProps = {
-    name: 'No',
-    positive: true,
+    buttonName: 'No',
+    styleProps: {
+      primary: true,
+      negative: true,
+    },
   };
 
   return (
