@@ -29,30 +29,36 @@ const DeleteEditButtons = props => {
   };
 
   const confirmButtonProps = {
-    name: 'Yes',
-    onClick: handleConfirmDelete,
-    to: ROUTES.CALENDAR,
-    component: Link,
-    positive: true,
+    buttonName: 'Yes',
+    actionFunc: handleConfirmDelete,
+    styleProps: {
+      primary: true,
+      positive: true,
+    },
+    urlToNavigate: ROUTES.CALENDAR,
   };
 
   const cancelButtonProps = {
-    name: 'No',
-    positive: true,
+    buttonName: 'No',
+    styleProps: {
+      primary: true,
+      negative: true,
+    },
   };
 
   return (
     <div className={classes.root}>
       <ButtonWithConfirmationModal
-        title='Delete this event?'
-        contentText='Do you want to delete this event permanently?'
+        modalTitle='Delete this event?'
+        modalContentText='Do you want to delete this event permanently?'
         confirmButtonProps={confirmButtonProps}
         cancelButtonProps={cancelButtonProps}
         name='Delete'
-        className={classes.delete}
-        startIcon={<DeleteIcon />}
-        primary
-        negative
+        openButtonStyleProps={{
+          startIcon: <DeleteIcon />,
+          primary: true,
+          negative: true,
+        }}
       />
 
       <Button
