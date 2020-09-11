@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 
@@ -9,6 +10,7 @@ import { deleteEvent } from '@Services/EventService';
 
 const DeleteEditButtons = props => {
   const { eventId } = props;
+  const history = useHistory();
 
   const handleDeleteEvent = eventToDeleteId => {
     deleteEvent(eventToDeleteId)
@@ -25,21 +27,19 @@ const DeleteEditButtons = props => {
   };
 
   const confirmButtonProps = {
-    buttonName: 'Yes',
-    actionFunc: handleConfirmDelete,
-    styleProps: {
-      primary: true,
-      positive: true,
+    name: 'Yes',
+    actionCallback: () => {
+      handleConfirmDelete();
+      history.push(ROUTES.CALENDAR);
     },
-    urlToNavigate: ROUTES.CALENDAR,
+    primary: true,
+    positive: true,
   };
 
   const cancelButtonProps = {
-    buttonName: 'No',
-    styleProps: {
-      primary: true,
-      negative: true,
-    },
+    name: 'No',
+    primary: true,
+    positive: true,
   };
 
   return (
