@@ -12,7 +12,7 @@ interface BaseModalProps {
   contentText: string;
   open: boolean;
   handleClose: () => void;
-  children: JSX.Element[];
+  children: JSX.Element[] | JSX.Element;
 }
 
 export const BaseModal = ({

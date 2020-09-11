@@ -1,8 +1,7 @@
 import React from 'react';
 
-import { ButtonProps } from '../buttons/Button';
-
-import { ButtonWithModal, ActionButton } from './base/ButtonWithModal';
+import { ButtonWithModal } from './ButtonWithModal';
+import { ActionButton } from './ModalWithActionButtons';
 
 export interface ButtonConfirmationModalProps {
   modalTitle: string;
@@ -10,7 +9,6 @@ export interface ButtonConfirmationModalProps {
   name: string;
   confirmButtonProps: ActionButton;
   cancelButtonProps: ActionButton;
-  openButtonStyleProps?: ButtonProps;
 }
 
 export const ButtonWithConfirmationModal = ({
@@ -19,15 +17,15 @@ export const ButtonWithConfirmationModal = ({
   name,
   confirmButtonProps,
   cancelButtonProps,
-  openButtonStyleProps = {},
+  ...otherOpenButtonProps
 }: ButtonConfirmationModalProps) => {
   return (
     <ButtonWithModal
       modalTitle={modalTitle}
       modalContentText={modalContentText}
       name={name}
-      actionButtonList={[confirmButtonProps, cancelButtonProps]}
-      openButtonStyleProps={openButtonStyleProps}
+      actionButtonList={[cancelButtonProps, confirmButtonProps]}
+      {...otherOpenButtonProps}
     />
   );
 };
@@ -44,6 +42,7 @@ export const ButtonWithAlertModal = ({
   modalContentText,
   name,
   closeButtonProps,
+  ...otherOpenButtonProps
 }: ButtonAlertModalProps) => {
   return (
     <ButtonWithModal
@@ -51,6 +50,7 @@ export const ButtonWithAlertModal = ({
       modalContentText={modalContentText}
       name={name}
       actionButtonList={[closeButtonProps]}
+      {...otherOpenButtonProps}
     />
   );
 };

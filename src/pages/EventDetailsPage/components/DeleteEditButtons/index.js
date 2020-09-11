@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -13,6 +14,7 @@ import { deleteEvent } from '@Services/EventService';
 
 const DeleteEditButtons = props => {
   const { classes, eventId } = props;
+  const history = useHistory();
 
   const handleDeleteEvent = eventToDeleteId => {
     deleteEvent(eventToDeleteId)
@@ -29,21 +31,19 @@ const DeleteEditButtons = props => {
   };
 
   const confirmButtonProps = {
-    buttonName: 'Yes',
-    actionFunc: handleConfirmDelete,
-    styleProps: {
-      primary: true,
-      positive: true,
+    name: 'Yes',
+    actionCallback: () => {
+      handleConfirmDelete();
+      history.push(ROUTES.CALENDAR);
     },
-    urlToNavigate: ROUTES.CALENDAR,
+    primary: true,
+    positive: true,
   };
 
   const cancelButtonProps = {
-    buttonName: 'No',
-    styleProps: {
-      primary: true,
-      negative: true,
-    },
+    name: 'No',
+    primary: true,
+    positive: true,
   };
 
   return (
@@ -51,14 +51,12 @@ const DeleteEditButtons = props => {
       <ButtonWithConfirmationModal
         modalTitle='Delete this event?'
         modalContentText='Do you want to delete this event permanently?'
+        name='Delete'
         confirmButtonProps={confirmButtonProps}
         cancelButtonProps={cancelButtonProps}
-        name='Delete'
-        openButtonStyleProps={{
-          startIcon: <DeleteIcon />,
-          primary: true,
-          negative: true,
-        }}
+        startIcon={<DeleteIcon />}
+        primary
+        negative
       />
 
       <Button

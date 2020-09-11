@@ -1,11 +1,8 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 
-import {
-  ButtonWithModal,
-  ButtonWithModalProps,
-  ActionButton,
-} from './base/ButtonWithModal';
+import { ButtonWithModal, ButtonWithModalProps } from './ButtonWithModal';
+import { ActionButton } from './ModalWithActionButtons';
 
 export default {
   title: 'Modals/Button With Modal',
@@ -17,20 +14,16 @@ const Template: Story<ButtonWithModalProps> = args => (
 );
 
 const confirmButtonProps: ActionButton = {
-  buttonName: 'Confirm',
-  actionFunc: () => alert('You just clicked the confirm button!'),
-  styleProps: {
-    primary: true,
-    positive: true,
-  },
+  name: 'Confirm',
+  actionCallback: () => alert('You just clicked the confirm button!'),
+  primary: true,
+  positive: true,
 };
 
 const cancelButtonProps: ActionButton = {
-  buttonName: 'Cancel',
-  styleProps: {
-    primary: true,
-    negative: true,
-  },
+  name: 'Cancel',
+  primary: true,
+  negative: true,
 };
 
 export const ButtonWithConfirmationModal = Template.bind({});
@@ -38,15 +31,13 @@ ButtonWithConfirmationModal.args = {
   modalTitle: 'Sample Button With Confirmation Modal',
   modalContentText: 'Put any text you want here.',
   name: 'Click on me!',
-  actionButtonList: [confirmButtonProps, cancelButtonProps],
-  openButtonStyleProps: {
-    primary: true,
-    positive: true,
-  },
+  actionButtonList: [cancelButtonProps, confirmButtonProps],
+  primary: true,
+  positive: true,
 };
 
 const closeButtonProps: ActionButton = {
-  buttonName: 'Close',
+  name: 'Close',
 };
 
 export const ButtonWithAlertModal = Template.bind({});
@@ -55,8 +46,6 @@ ButtonWithAlertModal.args = {
   modalContentText: 'Put any text you want here.',
   name: 'Click on me!',
   actionButtonList: [closeButtonProps],
-  openButtonStyleProps: {
-    primary: true,
-    negative: true,
-  },
+  primary: true,
+  negative: true,
 };
