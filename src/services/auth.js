@@ -2,8 +2,9 @@ import * as firebase from 'firebase/app';
 import 'firebase/auth';
 
 import SIGNUP_ENDPOINT from '@Constants/endpoints';
+import { config } from '@Config';
 
-const SIGN_UP_URL = `${process.env.REACT_APP_API_BASE_URL}${SIGNUP_ENDPOINT}`;
+const SIGN_UP_URL = `${config.apiBaseURL}${SIGNUP_ENDPOINT}`;
 
 // Auth API
 const doCreateUserWithEmailAndPassword = (email, password) => {

@@ -26,6 +26,7 @@ import {
   OfficerRoutingPermission,
 } from '@HOCs/RoutingPermissions';
 import ApiConfigStore from '@Services/ApiConfigStore';
+import { config } from '@Config';
 
 function App(): JSX.Element {
   const [userClaims, setUserClaims] = useState<UserContextValues | null>(null);
@@ -140,4 +141,4 @@ function App(): JSX.Element {
   );
 }
 
-export default process.env.NODE_ENV === 'development' ? hot(App) : App;
+export default config.nodeEnv === 'development' ? hot(App) : App;
