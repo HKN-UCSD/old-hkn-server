@@ -7,7 +7,7 @@ import { config } from '@Config';
 class ApiConfigStoreClass {
   private configParams: ConfigurationParameters = {
     // TODO: load this from a config instead
-    basePath: config.apiBaseURL,
+    basePath: config.apiURL,
   };
 
   private config: Configuration = new Configuration(this.configParams);

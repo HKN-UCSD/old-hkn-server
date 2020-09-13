@@ -6,7 +6,7 @@ type Config = {
   storageBucket?: string;
   messagingSenderID?: string;
   appID?: string;
-  apiBaseURL?: string;
+  apiURL?: string;
   nodeEnv?: string;
 };
 
@@ -18,6 +18,6 @@ export const config: Config = {
   storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
   messagingSenderID: process.env.REACT_APP_MESSAGING_SENDER_ID,
   appID: process.env.REACT_APP_APP_ID,
-  apiBaseURL: process.env.REACT_APP_API_BASE_URL,
+  apiURL: process.env.REACT_APP_API_URL,
   nodeEnv: process.env.NODE_ENV,
 };

@@ -13,7 +13,7 @@ const appConfig = {
   authDomain: config.authDomain,
   databaseURL: config.databaseURL,
   projectId: config.projectID,
-  storageBuck: config.storageBucket,
+  storageBucket: config.storageBucket,
   messagingSenderId: config.messagingSenderID,
 };
 
