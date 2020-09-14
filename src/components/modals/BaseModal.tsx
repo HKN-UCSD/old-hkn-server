@@ -9,7 +9,7 @@ import {
 
 interface BaseModalProps {
   title: string;
-  contentText: string;
+  content: string;
   open: boolean;
   handleClose: () => void;
   children: JSX.Element[] | JSX.Element;
@@ -17,7 +17,7 @@ interface BaseModalProps {
 
 export const BaseModal = ({
   title,
-  contentText,
+  content,
   open,
   handleClose,
   children,
@@ -27,7 +27,7 @@ export const BaseModal = ({
       <DialogTitle>{title}</DialogTitle>
 
       <DialogContent>
-        <DialogContentText>{contentText}</DialogContentText>
+        <DialogContentText>{content}</DialogContentText>
       </DialogContent>
 
       <DialogActions>{children}</DialogActions>

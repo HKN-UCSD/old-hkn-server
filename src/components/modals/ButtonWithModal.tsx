@@ -2,42 +2,40 @@ import React, { useState } from 'react';
 
 import { Button, ButtonProps } from '../buttons/Button';
 
-import {
-  ModalProps,
-  ModalWithActionButtons,
-  ActionButton,
-} from './ModalWithActionButtons';
+import { ModalProps, ModalWithActionButtons } from './ModalWithActionButtons';
+
+export interface ModalTitleContentProps {
+  title: string;
+  content: string;
+}
 
 export interface ButtonWithModalProps extends ButtonProps {
-  modalTitle: string;
-  modalContentText: string;
-  actionButtonList: ActionButton[];
+  modalTitleContentProps: ModalTitleContentProps;
+  actionButtonPropsList: ButtonProps[];
 }
 
 export const ButtonWithModal = ({
-  modalTitle,
-  modalContentText,
+  modalTitleContentProps,
   name,
-  actionButtonList,
-  ...otherOpenButtonProps
+  actionButtonPropsList,
+  ...otherButtonProps
 }: ButtonWithModalProps) => {
   const [open, setOpen] = useState(false);
   const modalProps: ModalProps = {
-    title: modalTitle,
-    contentText: modalContentText,
+    ...modalTitleContentProps,
     open,
     handleClose: () => setOpen(false),
   };
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} {...otherOpenButtonProps}>
+      <Button onClick={() => setOpen(true)} {...otherButtonProps}>
         {name}
       </Button>
 
       <ModalWithActionButtons
         modalProps={modalProps}
-        actionButtonList={actionButtonList}
+        actionButtonPropsList={actionButtonPropsList}
       />
     </>
   );

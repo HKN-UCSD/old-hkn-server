@@ -32,7 +32,7 @@ const DeleteEditButtons = props => {
 
   const confirmButtonProps = {
     name: 'Yes',
-    actionCallback: () => {
+    onClick: () => {
       handleConfirmDelete();
       history.push(ROUTES.CALENDAR);
     },
@@ -49,11 +49,13 @@ const DeleteEditButtons = props => {
   return (
     <div className={classes.root}>
       <ButtonWithConfirmationModal
-        modalTitle='Delete this event?'
-        modalContentText='Do you want to delete this event permanently?'
+        confirmationModalProps={{
+          title: 'Delete this event?',
+          content: 'Do you want to delete this event permanently?',
+          confirmButtonProps,
+          cancelButtonProps,
+        }}
         name='Delete'
-        confirmButtonProps={confirmButtonProps}
-        cancelButtonProps={cancelButtonProps}
         startIcon={<DeleteIcon />}
         primary
         negative

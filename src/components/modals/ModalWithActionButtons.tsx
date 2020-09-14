@@ -4,45 +4,35 @@ import { Button, ButtonProps } from '../buttons/Button';
 
 import { BaseModal } from './BaseModal';
 
-export interface ActionButton extends ButtonProps {
-  actionCallback?: (...params: any[]) => any;
-  closeModalOnClick?: boolean;
-}
-
 export interface ModalProps {
   title: string;
-  contentText: string;
+  content: string;
   open: boolean;
   handleClose: () => void;
 }
 
-interface ModalActionButtonProps {
+interface ModalWithActionButtonProps {
   modalProps: ModalProps;
-  actionButtonList: ActionButton[];
+  actionButtonPropsList: ButtonProps[];
 }
 
 export const ModalWithActionButtons = ({
   modalProps,
-  actionButtonList,
-}: ModalActionButtonProps) => {
+  actionButtonPropsList,
+}: ModalWithActionButtonProps) => {
   return (
     <BaseModal {...modalProps}>
-      {actionButtonList.map((buttonProps: ActionButton) => {
-        const {
-          name,
-          closeModalOnClick = true,
-          actionCallback = () => {
-            return null;
-          },
-          ...otherProps
-        } = buttonProps;
+      {actionButtonPropsList.map((buttonProps: ButtonProps) => {
+        const { name, onClick, ...otherProps } = buttonProps;
 
-        const onClickFunction = () => {
-          if (closeModalOnClick) {
-            modalProps.handleClose();
+        const onClickFunction = (
+          event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+        ) => {
+          if (onClick !== undefined) {
+            onClick(event);
           }
 
-          actionCallback();
+          modalProps.handleClose();
         };
 
         return (
