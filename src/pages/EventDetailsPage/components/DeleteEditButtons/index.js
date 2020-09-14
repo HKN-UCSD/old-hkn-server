@@ -28,7 +28,7 @@ const DeleteEditButtons = props => {
 
   const confirmButtonProps = {
     name: 'Yes',
-    actionCallback: () => {
+    onClick: () => {
       handleConfirmDelete();
       history.push(ROUTES.CALENDAR);
     },
@@ -46,12 +46,14 @@ const DeleteEditButtons = props => {
     <Grid container justify='flex-end' spacing={1}>
       <Grid item>
         <ButtonWithConfirmationModal
-          title='Delete this event?'
-          contentText='Do you want to delete this event permanently?'
-          confirmButtonProps={confirmButtonProps}
-          cancelButtonProps={cancelButtonProps}
+          confirmationModalProps={{
+            title: 'Delete this event?',
+            content: 'Do you want to delete this event permanently?',
+            confirmButtonProps,
+            cancelButtonProps,
+          }}
           name='Delete'
-          secondary
+          primary
           negative
         />
       </Grid>

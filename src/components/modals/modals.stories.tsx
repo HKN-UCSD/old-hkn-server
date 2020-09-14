@@ -1,8 +1,9 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 
+import { ButtonProps } from '../buttons/Button';
+
 import { ButtonWithModal, ButtonWithModalProps } from './ButtonWithModal';
-import { ActionButton } from './ModalWithActionButtons';
 
 export default {
   title: 'Modals/Button With Modal',
@@ -13,14 +14,14 @@ const Template: Story<ButtonWithModalProps> = args => (
   <ButtonWithModal {...args} />
 );
 
-const confirmButtonProps: ActionButton = {
+const confirmButtonProps: ButtonProps = {
   name: 'Confirm',
-  actionCallback: () => alert('You just clicked the confirm button!'),
+  onClick: () => alert('You just clicked the confirm button!'),
   primary: true,
   positive: true,
 };
 
-const cancelButtonProps: ActionButton = {
+const cancelButtonProps: ButtonProps = {
   name: 'Cancel',
   primary: true,
   negative: true,
@@ -28,24 +29,28 @@ const cancelButtonProps: ActionButton = {
 
 export const ButtonWithConfirmationModal = Template.bind({});
 ButtonWithConfirmationModal.args = {
-  modalTitle: 'Sample Button With Confirmation Modal',
-  modalContentText: 'Put any text you want here.',
+  modalTitleContentProps: {
+    title: 'Sample Button With Confirmation Modal',
+    content: 'Put any text you want here.',
+  },
   name: 'Click on me!',
-  actionButtonList: [cancelButtonProps, confirmButtonProps],
+  actionButtonPropsList: [cancelButtonProps, confirmButtonProps],
   primary: true,
   positive: true,
 };
 
-const closeButtonProps: ActionButton = {
+const closeButtonProps: ButtonProps = {
   name: 'Close',
 };
 
 export const ButtonWithAlertModal = Template.bind({});
 ButtonWithAlertModal.args = {
-  modalTitle: 'Sample Button With Alert Modal',
-  modalContentText: 'Put any text you want here.',
+  modalTitleContentProps: {
+    title: 'Sample Button With Alert Modal',
+    content: 'Put any text you want here.',
+  },
   name: 'Click on me!',
-  actionButtonList: [closeButtonProps],
+  actionButtonPropsList: [closeButtonProps],
   primary: true,
   negative: true,
 };
