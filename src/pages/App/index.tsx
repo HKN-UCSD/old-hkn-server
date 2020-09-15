@@ -16,6 +16,7 @@ import {
   EventDetailsPage,
   EventSignInPage,
   EventRsvpPage,
+  QueriedEventPage,
 } from '@Pages';
 import { Loading } from '@SharedComponents';
 import { UserContext, UserContextValues } from '@Contexts';
@@ -26,6 +27,7 @@ import {
   OfficerRoutingPermission,
 } from '@HOCs/RoutingPermissions';
 import ApiConfigStore from '@Services/ApiConfigStore';
+import { config } from '@Config';
 
 function App(): JSX.Element {
   const [userClaims, setUserClaims] = useState<UserContextValues | null>(null);
@@ -115,6 +117,11 @@ function App(): JSX.Element {
           />
           <Route
             exact
+            path={ROUTES.EVENTS}
+            render={() => <QueriedEventPage />}
+          />
+          <Route
+            exact
             path={ROUTES.EVENT_DETAILS}
             render={props => InducteeRoutingPermission(EventDetailsPage)(props)}
           />
@@ -140,4 +147,4 @@ function App(): JSX.Element {
   );
 }
 
-export default process.env.NODE_ENV === 'development' ? hot(App) : App;
+export default config.nodeEnv === 'development' ? hot(App) : App;
