@@ -31,7 +31,6 @@ import { config } from '@Config';
 
 function App(): JSX.Element {
   const [userClaims, setUserClaims] = useState<UserContextValues | null>(null);
-  const [userToken, setUserToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -40,7 +39,9 @@ function App(): JSX.Element {
         const tokenResult = await user.getIdTokenResult();
         const { claims, token } = tokenResult;
 
-        // TODO: Add ApiConfigStore.setToken(token || '') here so getUserRole() works
+        // TODO if there's no change then don't set state to
+        // save a rerender
+        ApiConfigStore.setToken(token || '');
 
         const id = parseInt(claims.user_id, 10);
         const userRole = await getUserRole(id);
@@ -49,34 +50,27 @@ function App(): JSX.Element {
           userId: claims.user_id,
           userRoles: [userRole.role],
         });
-        setUserToken(token);
         setIsLoading(false);
       } else {
         setUserClaims(null);
-        setUserToken(null);
         setIsLoading(false);
       }
     });
   }, []);
 
   // eslint-disable-next-line camelcase
-  const setClaims = async (claims: { user_id: string }): Promise<void> => {
-    /* TODO: Remove the line below bc userToken might not be set by the time setClaims
-     * is run. Given that setClaims() is run after onAuthStateChanged(), this setToken()
-     * call is going to override whatever was the token with empty string if userToken
-     * is not set by the time this function is called (which happened to me).
-     *
-     * So it's best to remove this line.
-     *
-     * - Thai
-     */
-    ApiConfigStore.setToken(userToken || '');
+  const setClaims = async (
+    // eslint-disable-next-line camelcase
+    userID: string,
+    token: string
+  ): Promise<void> => {
+    ApiConfigStore.setToken(token);
 
-    const id = parseInt(claims.user_id, 10);
+    const id = parseInt(userID, 10);
     const userRole = await getUserRole(id);
 
     setUserClaims({
-      userId: claims.user_id,
+      userId: userID,
       userRoles: [userRole.role],
     });
   };
