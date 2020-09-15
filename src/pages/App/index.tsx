@@ -16,6 +16,7 @@ import {
   EventDetailsPage,
   EventSignInPage,
   EventRsvpPage,
+  QueriedEventPage,
 } from '@Pages';
 import { Loading } from '@SharedComponents';
 import { UserContext, UserContextValues } from '@Contexts';
@@ -113,6 +114,11 @@ function App(): JSX.Element {
             exact
             path={ROUTES.CALENDAR}
             render={props => InducteeRoutingPermission(CalendarPage)(props)}
+          />
+          <Route
+            exact
+            path={ROUTES.EVENTS}
+            render={() => <QueriedEventPage />}
           />
           <Route
             exact
