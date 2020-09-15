@@ -49,5 +49,4 @@ export {
   doSendVerificationEmail,
   doPasswordUpdate,
   getCurrentUserIDAndToken,
-  createUserAccountFromSignup,
 };
