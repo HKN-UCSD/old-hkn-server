@@ -16,18 +16,16 @@ import {
   EventDetailsPage,
   EventSignInPage,
   EventRsvpPage,
-  QueriedEventPage,
 } from '@Pages';
 import { Loading } from '@SharedComponents';
 import { UserContext, UserContextValues } from '@Contexts';
 import * as ROUTES from '@Constants/routes';
-import { getRolesFromClaims } from '@Services/claims';
+import { getUserRole } from '@Services/UserService';
 import {
   InducteeRoutingPermission,
   OfficerRoutingPermission,
 } from '@HOCs/RoutingPermissions';
 import ApiConfigStore from '@Services/ApiConfigStore';
-import { config } from '@Config';
 
 function App(): JSX.Element {
   const [userClaims, setUserClaims] = useState<UserContextValues | null>(null);
@@ -40,9 +38,14 @@ function App(): JSX.Element {
         const tokenResult = await user.getIdTokenResult();
         const { claims, token } = tokenResult;
 
+        // TODO: Add ApiConfigStore.setToken(token || '') here so getUserRole() works
+
+        const id = parseInt(claims.user_id, 10);
+        const userRole = await getUserRole(id);
+
         setUserClaims({
           userId: claims.user_id,
-          userRoles: getRolesFromClaims(claims),
+          userRoles: [userRole.role],
         });
         setUserToken(token);
         setIsLoading(false);
@@ -55,12 +58,24 @@ function App(): JSX.Element {
   }, []);
 
   // eslint-disable-next-line camelcase
-  const setClaims = (claims: { user_id: string }) => {
+  const setClaims = async (claims: { user_id: string }): Promise<void> => {
+    /* TODO: Remove the line below bc userToken might not be set by the time setClaims
+     * is run. Given that setClaims() is run after onAuthStateChanged(), this setToken()
+     * call is going to override whatever was the token with empty string if userToken
+     * is not set by the time this function is called (which happened to me).
+     *
+     * So it's best to remove this line.
+     *
+     * - Thai
+     */
     ApiConfigStore.setToken(userToken || '');
+
+    const id = parseInt(claims.user_id, 10);
+    const userRole = await getUserRole(id);
 
     setUserClaims({
       userId: claims.user_id,
-      userRoles: getRolesFromClaims(claims),
+      userRoles: [userRole.role],
     });
   };
 
@@ -117,11 +132,6 @@ function App(): JSX.Element {
           />
           <Route
             exact
-            path={ROUTES.EVENTS}
-            render={() => <QueriedEventPage />}
-          />
-          <Route
-            exact
             path={ROUTES.EVENT_DETAILS}
             render={props => InducteeRoutingPermission(EventDetailsPage)(props)}
           />
@@ -147,4 +157,4 @@ function App(): JSX.Element {
   );
 }
 
-export default config.nodeEnv === 'development' ? hot(App) : App;
+export default process.env.NODE_ENV === 'development' ? hot(App) : App;
