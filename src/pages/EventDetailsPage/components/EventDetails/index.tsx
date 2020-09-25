@@ -97,7 +97,7 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
                       <Typography variant='h6'>
                         Start Time:{' '}
                         <Typography>
-                          {format(parseISO(startDate), 'PPP p')}
+                          {format(parseISO(startDate), 'PPP h:mm aaaa')}
                         </Typography>
                       </Typography>
                     </Grid>
@@ -106,7 +106,7 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
                       <Typography variant='h6'>
                         End Time:{' '}
                         <Typography>
-                          {format(parseISO(endDate), 'PPP p')}
+                          {format(parseISO(endDate), 'PPP h:mm aaaa')}
                         </Typography>
                       </Typography>
                     </Grid>
