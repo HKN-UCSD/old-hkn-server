@@ -1,9 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles({
-  eventDetailsCard: {
-    width: '536px',
-  },
   title: {
     wordWrap: 'break-word',
   },

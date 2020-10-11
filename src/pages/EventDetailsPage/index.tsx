@@ -28,7 +28,10 @@ function EventDetailsPage(): JSX.Element {
   return eventInfo == null ? (
     <Loading />
   ) : (
+    // <Grid direction="vertical">
     <EventDetailsComponent eventId={eventId} eventInfo={eventInfo} />
+    /* <CheckoffCard getAttendances={}/> {// checkoff={}/>} */
+    // </Grid>
   );
 }
 

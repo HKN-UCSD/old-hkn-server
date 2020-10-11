@@ -51,12 +51,12 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
   };
 
   return (
-    <Grid container direction='column' alignItems='center' spacing={3}>
-      <Grid item>
-        <Card className={classes.eventDetailsCard}>
-          <Grid container direction='column' justify='center' spacing={3}>
-            <Grid item>
-              <Grid container direction='row' justify='center'>
+    <Grid container justify='center' spacing={3}>
+      <Grid item sm={12} md={10} lg={6}>
+        <Card>
+          <Grid container direction='row' spacing={3}>
+            <Grid item xs={12}>
+              <Grid container>
                 <Grid item xs>
                   <Typography className={classes.title} variant='h4'>
                     {name}
@@ -64,35 +64,49 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
                   </Typography>
                 </Grid>
 
-                <Grid item>
-                  {OfficerRenderPermission(DeleteEditButtons)({
-                    eventId,
-                  })}
+                <Grid item sm={5} md={4} lg={3}>
+                  <Grid container direction='column' spacing={1}>
+                    {/* add column */}
+                    <Grid item>
+                      {OfficerRenderPermission(DeleteEditButtons)({
+                        eventId,
+                      })}
+                    </Grid>
+
+                    <Grid item>
+                      <Grid container justify='flex-end' spacing={1}>
+                        <Grid item>
+                          <SignInButton eventId={eventId} />
+                        </Grid>
+                        <Grid item>
+                          <RSVPButton eventId={eventId} />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
 
-            <Grid item>
-              <Grid container direction='row' justify='center' spacing={3}>
+            <Grid item xs={12}>
+              <Grid container direction='row' spacing={3}>
                 <Grid item xs={6}>
-                  <Typography className={classes.hosts} variant='h6'>
-                    Hosts:{' '}
-                    {hosts.map(host => (
-                      <Typography key={host.id} className={classes.hostName}>
-                        {`${host.firstName} ${host.lastName}`}
+                  <Grid container direction='column' spacing={1}>
+                    <Grid item>
+                      <Typography className={classes.hosts} variant='h6'>
+                        Hosts:{' '}
+                        <Typography>
+                          {hosts
+                            .map(host => `${host.firstName} ${host.lastName}`)
+                            .join(', ')}
+                        </Typography>
                       </Typography>
-                    ))}
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={6}>
-                  <Grid container direction='column'>
-                    <Grid item className={classes.location}>
+                    </Grid>
+                    <Grid item>
                       <Typography variant='h6'>
                         Location: <Typography>{location}</Typography>
                       </Typography>
                     </Grid>
-
                     <Grid item>
                       <Typography variant='h6'>
                         Start Time:{' '}
@@ -101,7 +115,6 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
                         </Typography>
                       </Typography>
                     </Grid>
-
                     <Grid item>
                       <Typography variant='h6'>
                         End Time:{' '}
@@ -112,19 +125,15 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </Grid>
 
-            <Grid item>
-              <Grid container direction='row' justify='center' spacing={3}>
-                <Grid item>
-                  <Grid
-                    container
-                    direction='column'
-                    justify='center'
-                    alignItems='center'
-                    spacing={3}
-                  >
+                <Grid item xs={6}>
+                  <Grid container direction='column' spacing={3}>
+                    <Grid item>
+                      <Typography variant='h6'>
+                        Description: <Typography>{description}</Typography>
+                      </Typography>
+                    </Grid>
+
                     <Grid item>
                       {InducteeRenderPermission(Links)({
                         urls,
@@ -132,21 +141,7 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
                         rsvp: { url: rsvpURL, label: 'RSVP Form' },
                       })}
                     </Grid>
-
-                    <Grid item>
-                      <SignInButton eventId={eventId} />
-                    </Grid>
-
-                    <Grid item>
-                      <RSVPButton eventId={eventId} />
-                    </Grid>
                   </Grid>
-                </Grid>
-
-                <Grid item xs>
-                  <Typography variant='h6'>
-                    Description: <Typography>{description}</Typography>
-                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -154,16 +149,20 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
         </Card>
       </Grid>
 
-      <Grid item>
-        <Button
-          secondary
-          negative
-          onClick={() => {
-            history.push(ROUTES.CALENDAR);
-          }}
-        >
-          Back To Calendar
-        </Button>
+      <Grid item xs={12}>
+        <Grid container justify='center'>
+          <Grid item>
+            <Button
+              secondary
+              negative
+              onClick={() => {
+                history.push(ROUTES.CALENDAR);
+              }}
+            >
+              Back To Calendar
+            </Button>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
