@@ -2,17 +2,12 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles({
   title: {
-    wordWrap: 'break-word',
+    width: '100%',
+    wordBreak: 'break-word',
   },
-  hosts: {
-    wordWrap: 'break-word',
-  },
-  hostName: {
-    marginBottom: '5px',
-  },
-  location: {
-    wordWrap: 'break-word',
-    maxWidth: 240,
+  detail: {
+    width: '100%',
+    wordBreak: 'break-word',
   },
 });
 
