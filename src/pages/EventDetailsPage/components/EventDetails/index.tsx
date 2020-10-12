@@ -1,6 +1,5 @@
 import React from 'react';
 import { Typography, Grid } from '@material-ui/core';
-import { useHistory } from 'react-router';
 import { format, parseISO } from 'date-fns';
 
 import DeleteEditButtons from '../DeleteEditButtons';
@@ -14,8 +13,7 @@ import {
   OfficerRenderPermission,
   InducteeRenderPermission,
 } from '@HOCs/RenderPermissions';
-import * as ROUTES from '@Constants/routes';
-import { Tags, Card, Button } from '@SharedComponents';
+import { Tags, Card } from '@SharedComponents';
 import { EventResponse as EventInfo } from '@Services/api/models';
 
 interface EventDetailsComponentProps {
@@ -26,7 +24,6 @@ interface EventDetailsComponentProps {
 function EventDetailsComponent(props: EventDetailsComponentProps) {
   const { eventInfo, eventId } = props;
   const classes = useStyles();
-  const history = useHistory();
 
   const {
     endDate,
@@ -147,22 +144,6 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
             </Grid>
           </Grid>
         </Card>
-      </Grid>
-
-      <Grid item xs={12}>
-        <Grid container justify='center'>
-          <Grid item>
-            <Button
-              secondary
-              negative
-              onClick={() => {
-                history.push(ROUTES.CALENDAR);
-              }}
-            >
-              Back To Calendar
-            </Button>
-          </Grid>
-        </Grid>
       </Grid>
     </Grid>
   );
