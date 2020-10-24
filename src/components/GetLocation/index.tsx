@@ -8,7 +8,8 @@ interface GetLocationProps {
 const GetLocation = (props: GetLocationProps) => {
     const { location } = props;
     try {
-        new URL(location);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+        const _ = new URL(location);
     } catch (_) {
         return <Typography>{location}</Typography>;
     }
