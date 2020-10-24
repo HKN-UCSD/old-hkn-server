@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Grid, Link } from '@material-ui/core';
+import { Typography, Grid } from '@material-ui/core';
 import { format, parseISO } from 'date-fns';
 
 import DeleteEditButtons from '../DeleteEditButtons';
@@ -13,11 +13,8 @@ import {
   OfficerRenderPermission,
   InducteeRenderPermission,
 } from '@HOCs/RenderPermissions';
-import { Tags, Card } from '@SharedComponents';
+import { Tags, Card, GetLocation } from '@SharedComponents';
 import { EventResponse as EventInfo } from '@Services/api/models';
-
-
-
 
 interface EventDetailsComponentProps {
   eventInfo: EventInfo;
@@ -48,15 +45,6 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
       label: 'Facebook',
     },
     canva: { url: canvaURL, label: 'Canva' },
-  };
-
-  const GetLocation = () => {
-    try {
-      new URL(location);
-    } catch (_) {
-      return <Typography>{location}</Typography>;
-    }
-    return <Link href={location}>{location}</Link>;
   };
 
   return (
@@ -113,7 +101,7 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
                     </Grid>
                     <Grid item>
                       <Typography className={classes.detail} variant='h6'>
-                        Location: <GetLocation />
+                        Location: <GetLocation location={location} />
                       </Typography>
                     </Grid>
                     <Grid item>

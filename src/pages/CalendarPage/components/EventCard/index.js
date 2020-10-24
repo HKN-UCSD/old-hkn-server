@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box, Button, Link as MUILink } from '@material-ui/core';
+import { Typography, Box, Button } from '@material-ui/core';
 import RoomIcon from '@material-ui/icons/Room';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 import styles from './styles';
 
-import { Card } from '@SharedComponents';
+import { Card, GetLocation } from '@SharedComponents';
 
 function EventCard({ event, classes }) {
   return (
@@ -22,7 +22,7 @@ function EventCard({ event, classes }) {
           </Typography>
           <Box className={classes.locationContainer}>
             <RoomIcon color='disabled' />
-            <MUILink href={event.location}>{event.location}</MUILink>
+            <GetLocation location={event.location} />
           </Box>
           <Button
             variant='outlined'
