@@ -58,6 +58,7 @@ function CheckOffTable(props: CheckOffTableProps) {
 
   const attendanceData = attendances.map(attendance => {
     const fullName = `${attendance.attendee.firstName} ${attendance.attendee.lastName}`;
+    // TODO: Remove type casting on startTime when startTime on payload is changed to string and move map logic to a separate function
     const startTimeString = format(
       parseISO((attendance.startTime as unknown) as string),
       'PPP h:mm aaaa'
@@ -71,13 +72,8 @@ function CheckOffTable(props: CheckOffTableProps) {
     return attendanceToDisplay;
   });
 
-  // TODO: Remove type casting on startTime when startTime on payload is changed to string and move map logic to a separate function
   return (
-    <Table>
-      columns={columns}
-      data={attendanceData}
-      title=Check Off Table
-    </Table>
+    <Table columns={columns} data={attendanceData} title='Check Off Table' />
   );
 }
 
