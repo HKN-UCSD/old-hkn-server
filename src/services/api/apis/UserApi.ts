@@ -14,6 +14,12 @@
 
 import * as runtime from '../runtime';
 import {
+  AppUserInducteePointsResponse,
+  AppUserInducteePointsResponseFromJSON,
+  AppUserInducteePointsResponseToJSON,
+  AppUserMemberPointsResponse,
+  AppUserMemberPointsResponseFromJSON,
+  AppUserMemberPointsResponseToJSON,
   AppUserPostRequest,
   AppUserPostRequestFromJSON,
   AppUserPostRequestToJSON,
@@ -38,6 +44,14 @@ export interface UserControllerCreateUserRequest {
 export interface UserControllerGetMultipleUsersRequest {
   officers?: boolean;
   names?: boolean;
+}
+
+export interface UserControllerGetUserInducteePointsRequest {
+  userID: number;
+}
+
+export interface UserControllerGetUserMemberPointsRequest {
+  userID: number;
 }
 
 export interface UserControllerGetUserProfileRequest {
@@ -147,6 +161,118 @@ export class UserApi extends runtime.BaseAPI {
     requestParameters: UserControllerGetMultipleUsersRequest
   ): Promise<MultipleAppUserResponse> {
     const response = await this.userControllerGetMultipleUsersRaw(
+      requestParameters
+    );
+    return await response.value();
+  }
+
+  /**
+   * Get user inductee points
+   */
+  async userControllerGetUserInducteePointsRaw(
+    requestParameters: UserControllerGetUserInducteePointsRequest
+  ): Promise<runtime.ApiResponse<AppUserInducteePointsResponse>> {
+    if (
+      requestParameters.userID === null ||
+      requestParameters.userID === undefined
+    ) {
+      throw new runtime.RequiredError(
+        'userID',
+        'Required parameter requestParameters.userID was null or undefined when calling userControllerGetUserInducteePoints.'
+      );
+    }
+
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString =
+        typeof token === 'function' ? token('TokenAuth', []) : token;
+
+      if (tokenString) {
+        headerParameters['Authorization'] = `Bearer ${tokenString}`;
+      }
+    }
+    const response = await this.request({
+      path: `/api/users/{userID}/inductee-points`.replace(
+        `{${'userID'}}`,
+        encodeURIComponent(String(requestParameters.userID))
+      ),
+      method: 'GET',
+      headers: headerParameters,
+      query: queryParameters,
+    });
+
+    return new runtime.JSONApiResponse(response, jsonValue =>
+      AppUserInducteePointsResponseFromJSON(jsonValue)
+    );
+  }
+
+  /**
+   * Get user inductee points
+   */
+  async userControllerGetUserInducteePoints(
+    requestParameters: UserControllerGetUserInducteePointsRequest
+  ): Promise<AppUserInducteePointsResponse> {
+    const response = await this.userControllerGetUserInducteePointsRaw(
+      requestParameters
+    );
+    return await response.value();
+  }
+
+  /**
+   * Get user member points
+   */
+  async userControllerGetUserMemberPointsRaw(
+    requestParameters: UserControllerGetUserMemberPointsRequest
+  ): Promise<runtime.ApiResponse<AppUserMemberPointsResponse>> {
+    if (
+      requestParameters.userID === null ||
+      requestParameters.userID === undefined
+    ) {
+      throw new runtime.RequiredError(
+        'userID',
+        'Required parameter requestParameters.userID was null or undefined when calling userControllerGetUserMemberPoints.'
+      );
+    }
+
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString =
+        typeof token === 'function' ? token('TokenAuth', []) : token;
+
+      if (tokenString) {
+        headerParameters['Authorization'] = `Bearer ${tokenString}`;
+      }
+    }
+    const response = await this.request({
+      path: `/api/users/{userID}/member-points`.replace(
+        `{${'userID'}}`,
+        encodeURIComponent(String(requestParameters.userID))
+      ),
+      method: 'GET',
+      headers: headerParameters,
+      query: queryParameters,
+    });
+
+    return new runtime.JSONApiResponse(response, jsonValue =>
+      AppUserMemberPointsResponseFromJSON(jsonValue)
+    );
+  }
+
+  /**
+   * Get user member points
+   */
+  async userControllerGetUserMemberPoints(
+    requestParameters: UserControllerGetUserMemberPointsRequest
+  ): Promise<AppUserMemberPointsResponse> {
+    const response = await this.userControllerGetUserMemberPointsRaw(
       requestParameters
     );
     return await response.value();

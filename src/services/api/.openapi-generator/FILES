@@ -6,7 +6,9 @@ apis\index.ts
 index.ts
 models\AppUserEventRequest.ts
 models\AppUserEventResponse.ts
+models\AppUserInducteePointsResponse.ts
 models\AppUserInductionClass.ts
+models\AppUserMemberPointsResponse.ts
 models\AppUserNameResponse.ts
 models\AppUserPKPayload.ts
 models\AppUserPostRequest.ts
