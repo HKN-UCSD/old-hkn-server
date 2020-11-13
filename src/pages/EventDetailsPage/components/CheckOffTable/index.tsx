@@ -68,7 +68,7 @@ function CheckOffTable(props: CheckOffTableProps) {
       name: fullName,
       startTimeString,
     };
-
+      
     return attendanceToDisplay;
   });
 
