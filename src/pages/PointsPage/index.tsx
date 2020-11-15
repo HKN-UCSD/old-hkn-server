@@ -34,14 +34,13 @@ export default function PointsPage() {
       const response: AppUserInducteePointsResponse = await getInductionPoints(
         currUserId
       );
-      console.log(response);
       setPointObj(response);
     };
     getPointsFunc();
   }, [id, userContext]);
 
   if (pointObj === undefined) {
-    return <></>;
+    return <h1>You have no points yet :(</h1>;
   }
 
   const {
