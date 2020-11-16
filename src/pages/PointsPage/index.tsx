@@ -7,6 +7,7 @@ import useStyles from './styles';
 
 import { getInductionPoints } from '@Services/UserService';
 import { AppUserInducteePointsResponse } from '@Services/api';
+import { isOfficer } from '@Services/claims';
 import { UserContext } from '@Contexts';
 import { CURR_USER_ID_ALIAS } from '@Constants/routes';
 
@@ -18,7 +19,7 @@ export default function PointsPage() {
   const { id } = useParams<EventID>();
   const userContext = useContext(UserContext);
   const [pointObj, setPointObj] = useState<
-    AppUserInducteePointsResponse | undefined
+    AppUserInducteePointsResponse | undefined | string
   >(undefined);
   const classes = useStyles();
 
@@ -29,6 +30,17 @@ export default function PointsPage() {
       }
 
       const { userId } = userContext;
+      // If you're not an officer, you can only see yourself through
+      // path param :id = me or :id = userId
+      if (
+        !isOfficer(userContext) &&
+        id !== CURR_USER_ID_ALIAS &&
+        id !== userId
+      ) {
+        setPointObj('404');
+        return;
+      }
+
       const currUserId: number =
         id === CURR_USER_ID_ALIAS ? parseInt(userId, 10) : parseInt(id, 10);
       const response: AppUserInducteePointsResponse = await getInductionPoints(
@@ -42,13 +54,16 @@ export default function PointsPage() {
   if (pointObj === undefined) {
     return <h1>You have no points yet :(</h1>;
   }
+  if (pointObj === '404') {
+    return <h1>Permission denied.</h1>;
+  }
 
   const {
     points,
     hasMentorshipRequirement,
     hasProfessionalRequirement,
     attendance,
-  } = pointObj;
+  } = pointObj as AppUserInducteePointsResponse;
 
   return (
     <div className={classes.root}>
