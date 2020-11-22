@@ -3,17 +3,50 @@ import React from 'react';
 import { Button } from '@SharedComponents';
 
 interface ConfirmScheduleButtonProps {
-  schedule: Array<Date>;
-  // eslint-disable-next-line react/require-default-props
+  schedules: Date[][];
   children?: string;
+  resetDirty: () => void;
+  disabled: boolean;
 }
 
 function ConfirmScheduleButton({
-  schedule,
+  schedules,
   children = 'Confirm Interview Schedule',
-}: ConfirmScheduleButtonProps): JSX.Element {
+  disabled,
+  resetDirty,
+}: ConfirmScheduleButtonProps) {
+  // Either make API call to update user's availabilities in handleOnClick (meaning
+  // you have to make handleOnClick async) or have a state to store the flattened
+  // schedule, then set that state in handleOnClick, then have a useEffect to handle
+  // the API call (either way should work, and I've tested to be sure that both handleOnClick and
+  // the useEffect call has the latest user schedule).
+
+  // const [schedule, setSchedule] = useState<Date[]>([]);
+
+  const flattenSchedules = (userSchedulesToFlatten: Date[][]): Date[] => {
+    let flattenedSchedule: Date[] = [];
+
+    for (let i = 0; i < userSchedulesToFlatten.length; i += 1) {
+      flattenedSchedule = flattenedSchedule.concat(userSchedulesToFlatten[i]);
+    }
+
+    return flattenedSchedule;
+  };
+
+  const handleOnClick = () => {
+    console.log(schedules);
+    console.log(flattenSchedules(schedules));
+
+    // setSchedule(flattenSchedules(schedules))
+    resetDirty();
+  };
+
+  /* useEffect(() => {
+    console.log(schedule);
+  }, [schedule]); */
+
   return (
-    <Button primary positive onClick={() => schedule}>
+    <Button primary positive disabled={disabled} onClick={handleOnClick}>
       {children}
     </Button>
   );
