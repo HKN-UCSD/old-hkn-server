@@ -7,6 +7,7 @@ import { Button } from '@SharedComponents';
 
 interface SchedulersWithConfirmButtonProps {
   startDates: Date[];
+  existingUserSchedule: Date[][];
 }
 
 const isEqualSchedules = (
@@ -28,14 +29,15 @@ const isEqualSchedules = (
 
 function SchedulersWithConfirmButton({
   startDates,
+  existingUserSchedule,
 }: SchedulersWithConfirmButtonProps): JSX.Element {
   const [isDirty, setIsDirty] = useState(false);
   const [userSchedules, setUserSchedules] = useState<Date[][]>([]);
 
   // Initialize the 2D array
   useEffect(() => {
-    setUserSchedules(startDates.map(() => []));
-  }, [startDates]);
+    setUserSchedules(existingUserSchedule);
+  }, [existingUserSchedule]);
 
   // Since each element in userSchedules represents a separate scheduler, when a scheduler is
   // modified, we modify its value in userSchedules via index.

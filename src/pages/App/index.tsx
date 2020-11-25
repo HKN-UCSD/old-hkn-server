@@ -131,10 +131,7 @@ function App(): JSX.Element {
             exact
             path={ROUTES.INTERVIEW_SCHEDULING}
             render={props =>
-              InducteeRoutingPermission(InterviewSchedulingPage)({
-                ...props,
-                userID: userClaims?.userId,
-              })
+              InducteeRoutingPermission(InterviewSchedulingPage)(props)
             }
           />
           <Route
