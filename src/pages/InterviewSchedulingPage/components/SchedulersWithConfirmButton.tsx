@@ -36,6 +36,7 @@ function SchedulersWithConfirmButton({
 
   // Initialize the 2D array
   useEffect(() => {
+    console.log(existingUserSchedule);
     setUserSchedules(existingUserSchedule);
   }, [existingUserSchedule]);
 

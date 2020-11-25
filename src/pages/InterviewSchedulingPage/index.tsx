@@ -4,7 +4,11 @@ import { add, compareAsc, differenceInDays, set } from 'date-fns';
 import SchedulersWithConfirmButton from './components/SchedulersWithConfirmButton';
 
 const stableDate = set(new Date(), { minutes: 0, seconds: 0, milliseconds: 0 });
-const mockInterviewStartWeek = [stableDate, add(stableDate, { weeks: 1 })];
+const mockInterviewStartWeek = [
+  stableDate,
+  add(stableDate, { weeks: 1 }),
+  add(stableDate, { weeks: 2 }),
+];
 const mockUserSchedule = [
   add(stableDate, { hours: 1 }),
   add(stableDate, { hours: 2 }),
@@ -15,6 +19,10 @@ const mockUserSchedule = [
   add(stableDate, { hours: 5, weeks: 1 }),
   add(stableDate, { hours: 2, days: 3, weeks: 1 }),
   add(stableDate, { hours: 3, days: 3, weeks: 1 }),
+  add(stableDate, { hours: 6, weeks: 2 }),
+  add(stableDate, { hours: 7, weeks: 2 }),
+  add(stableDate, { hours: 2, days: 4, weeks: 2 }),
+  add(stableDate, { hours: 3, days: 4, weeks: 2 }),
 ];
 
 function InterviewSchedulingPage(): JSX.Element {
@@ -43,7 +51,12 @@ function InterviewSchedulingPage(): JSX.Element {
             compareAsc(currUserDate, currStartWeek) >= 0 &&
             compareAsc(nextStartWeek, currUserDate) > 0
           ) {
-            scheduleSplitByWeek[j].push(currUserDate);
+            // scheduleSplitByWeek[j].push(currUserDate) doesn't work for some reason
+            // (kept adding currUserDate to all Date[] elements in scheduleSplitByWeek),
+            // so had to do this to get it to work
+            const weekToChange = Array.from(scheduleSplitByWeek[j]);
+            weekToChange.push(currUserDate);
+            scheduleSplitByWeek[j] = weekToChange;
             break;
           }
         } else if (
@@ -52,8 +65,9 @@ function InterviewSchedulingPage(): JSX.Element {
         ) {
           // Should be (diffInDays < numDays), where numDays is number of days to include in a week, but it is 5
           // right now because numDays for schedulers is 5 by default.
-          scheduleSplitByWeek[j].push(currUserDate);
-          break;
+          const weekToChange = Array.from(scheduleSplitByWeek[j]);
+          weekToChange.push(currUserDate);
+          scheduleSplitByWeek[j] = weekToChange;
         }
       }
     }

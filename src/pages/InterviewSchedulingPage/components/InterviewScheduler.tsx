@@ -12,7 +12,7 @@ interface InterviewSchedulerProps {
 
 function InterviewScheduler({
   numDays = 5,
-  minTime = 11,
+  minTime = 9,
   maxTime = 19,
   startDate = new Date(),
   selectedSchedule,
