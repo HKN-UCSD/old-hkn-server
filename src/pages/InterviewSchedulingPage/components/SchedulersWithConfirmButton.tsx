@@ -1,52 +1,85 @@
 import React, { useState, useEffect } from 'react';
+import { Grid } from '@material-ui/core';
 
 import InterviewScheduler from './InterviewScheduler';
-import ConfirmScheduleButton from './ConfirmScheduleButton';
+
+import { Button } from '@SharedComponents';
 
 interface SchedulersWithConfirmButtonProps {
   startDates: Date[];
 }
 
+const isEqualSchedules = (
+  currSchedule: Date[],
+  newSchedule: Date[]
+): boolean => {
+  if (currSchedule.length !== newSchedule.length) {
+    return false;
+  }
+
+  for (let i = 0; i < currSchedule.length; i += 1) {
+    if (currSchedule[i].getTime() !== newSchedule[i].getTime()) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 function SchedulersWithConfirmButton({
   startDates,
 }: SchedulersWithConfirmButtonProps): JSX.Element {
-  const [dirty, setDirty] = useState(false);
-  const [userSchedules, setUserSchedules] = useState<Date[][]>([[]]);
+  const [isDirty, setIsDirty] = useState(false);
+  const [userSchedules, setUserSchedules] = useState<Date[][]>([]);
 
+  // Initialize the 2D array
   useEffect(() => {
-    const initialSchedules: Date[][] = [];
+    setUserSchedules(startDates.map(() => []));
+  }, [startDates]);
 
-    for (let i = 0; i < startDates.length; i += 1) {
-      initialSchedules.push([]);
+  // Since each element in userSchedules represents a separate scheduler, when a scheduler is
+  // modified, we modify its value in userSchedules via index.
+  const setScheduleHOFByIndex = (scheduleIdx: number) => (schedule: Date[]) => {
+    const userSchedulesToUpdate = Array.from(userSchedules);
+
+    if (!isEqualSchedules(userSchedulesToUpdate[scheduleIdx], schedule)) {
+      userSchedulesToUpdate[scheduleIdx] = schedule;
+
+      setUserSchedules(userSchedulesToUpdate);
+      setIsDirty(true);
     }
+  };
 
-    setUserSchedules(initialSchedules);
-  }, [startDates.length]);
-
-  const updateUserSchedules = (scheduleIdx: number) => (schedule: Date[]) => {
-    const userSchedulesToUpdate = userSchedules;
-
-    userSchedulesToUpdate[scheduleIdx] = schedule;
-    setUserSchedules(userSchedulesToUpdate);
+  const handleOnClickConfirm = () => {
+    // Make API call here
+    console.log(userSchedules.flat());
+    setIsDirty(false);
   };
 
   return (
-    <>
-      {startDates.map((startDate, index) => (
-        <InterviewScheduler
-          key={index} // eslint-disable-line react/no-array-index-key
-          startDate={startDate}
-          setDirtyCallback={() => setDirty(true)}
-          selectedScheduleCallback={updateUserSchedules(index)}
-          reset={!dirty}
-        />
-      ))}
-      <ConfirmScheduleButton
-        disabled={!dirty}
-        schedules={userSchedules}
-        resetDirty={() => setDirty(false)}
-      />
-    </>
+    <Grid container direction='column' alignItems='center' spacing={3}>
+      <Grid item>
+        {startDates.map((startDate, index) => (
+          <InterviewScheduler
+            selectedSchedule={userSchedules[index]}
+            key={startDate.toDateString() + index} // eslint-disable-line react/no-array-index-key
+            startDate={startDate}
+            selectedScheduleCallback={setScheduleHOFByIndex(index)}
+          />
+        ))}
+      </Grid>
+
+      <Grid item>
+        <Button
+          primary
+          positive
+          disabled={!isDirty}
+          onClick={handleOnClickConfirm}
+        >
+          Confirm Interview Schedule
+        </Button>
+      </Grid>
+    </Grid>
   );
 }
 
