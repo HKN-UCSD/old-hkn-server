@@ -12,8 +12,8 @@ interface InterviewSchedulerProps {
 
 function InterviewScheduler({
   numDays = 5,
-  minTime = 9,
-  maxTime = 19,
+  minTime = 10,
+  maxTime = 18,
   startDate = new Date(),
   selectedSchedule,
   selectedScheduleCallback = () => {}, // eslint-disable-line @typescript-eslint/no-empty-function

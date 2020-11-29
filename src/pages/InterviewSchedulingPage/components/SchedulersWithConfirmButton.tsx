@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid } from '@material-ui/core';
+import { add } from 'date-fns';
 
 import InterviewScheduler from './InterviewScheduler';
 
@@ -9,6 +10,8 @@ interface SchedulersWithConfirmButtonProps {
   startDates: Date[];
   existingUserSchedule: Date[][];
 }
+
+const minTimesToPick = 8;
 
 const isEqualSchedules = (
   currSchedule: Date[],
@@ -27,6 +30,19 @@ const isEqualSchedules = (
   return true;
 };
 
+// Assume end time is always 1hr more than start time
+// Also use { startTime: Date, endTime: Date }[] until type issue on backend is resolved
+const getStartEndTimesFromStarts = (
+  startTimes: Date[]
+): { startTime: Date; endTime: Date }[] => {
+  const startEndTimes = startTimes.map(startTime => {
+    const endTime = add(startTime, { hours: 1 });
+    return { startTime, endTime };
+  });
+
+  return startEndTimes;
+};
+
 function SchedulersWithConfirmButton({
   startDates,
   existingUserSchedule,
@@ -36,7 +52,6 @@ function SchedulersWithConfirmButton({
 
   // Initialize the 2D array
   useEffect(() => {
-    console.log(existingUserSchedule);
     setUserSchedules(existingUserSchedule);
   }, [existingUserSchedule]);
 
@@ -54,9 +69,22 @@ function SchedulersWithConfirmButton({
   };
 
   const handleOnClickConfirm = () => {
-    // Make API call here
-    console.log(userSchedules.flat());
-    setIsDirty(false);
+    const flattenedSchedule = userSchedules.flat();
+
+    if (flattenedSchedule.length >= minTimesToPick) {
+      const availabilitiesToSend = getStartEndTimesFromStarts(
+        flattenedSchedule
+      );
+      console.log(availabilitiesToSend);
+
+      // Make API call here
+
+      setIsDirty(false);
+    } else {
+      alert(
+        'At least 8 interview times must be picked for this interview cycle'
+      );
+    }
   };
 
   return (
