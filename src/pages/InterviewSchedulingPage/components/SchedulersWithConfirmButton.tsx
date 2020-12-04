@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Grid } from '@material-ui/core';
-import { add } from 'date-fns';
+import { add, formatISO } from 'date-fns';
 
 import InterviewScheduler from './InterviewScheduler';
 
 import { Button } from '@SharedComponents';
+import { UserContext } from '@Contexts';
+import {
+  updateUserInterviewAvailabilities,
+  InterviewAvailability,
+} from '@Services/UserService';
 
 interface SchedulersWithConfirmButtonProps {
   startDates: Date[];
@@ -34,10 +39,10 @@ const isEqualSchedules = (
 // Also use { startTime: Date, endTime: Date }[] until type issue on backend is resolved
 const getStartEndTimesFromStarts = (
   startTimes: Date[]
-): { startTime: Date; endTime: Date }[] => {
-  const startEndTimes = startTimes.map(startTime => {
-    const endTime = add(startTime, { hours: 1 });
-    return { startTime, endTime };
+): InterviewAvailability[] => {
+  const startEndTimes = startTimes.map((start: Date) => {
+    const end: Date = add(start, { hours: 1 });
+    return { start: formatISO(start), end: formatISO(end) };
   });
 
   return startEndTimes;
@@ -49,11 +54,17 @@ function SchedulersWithConfirmButton({
 }: SchedulersWithConfirmButtonProps): JSX.Element {
   const [isDirty, setIsDirty] = useState(false);
   const [userSchedules, setUserSchedules] = useState<Date[][]>([]);
+  const userId = useContext(UserContext)?.userId;
 
   // Initialize the 2D array
   useEffect(() => {
     setUserSchedules(existingUserSchedule);
   }, [existingUserSchedule]);
+
+  if (!userId) {
+    // they're not logged in which is impossible
+    return <></>;
+  }
 
   // Since each element in userSchedules represents a separate scheduler, when a scheduler is
   // modified, we modify its value in userSchedules via index.
@@ -68,18 +79,22 @@ function SchedulersWithConfirmButton({
     }
   };
 
-  const handleOnClickConfirm = () => {
+  const handleOnClickConfirm = async () => {
     const flattenedSchedule = userSchedules.flat();
 
     if (flattenedSchedule.length >= minTimesToPick) {
       const availabilitiesToSend = getStartEndTimesFromStarts(
         flattenedSchedule
       );
-      console.log(availabilitiesToSend);
 
       // Make API call here
+      await updateUserInterviewAvailabilities(
+        parseInt(userId, 10),
+        availabilitiesToSend
+      );
 
       setIsDirty(false);
+      alert('Availabilities successfully updated');
     } else {
       alert(
         'At least 8 interview times must be picked for this interview cycle'

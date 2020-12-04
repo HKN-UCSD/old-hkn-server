@@ -1,90 +1,120 @@
-import React from 'react';
-import { add, compareAsc, differenceInDays, set } from 'date-fns';
+import React, { useEffect, useContext, useState } from 'react';
+import { compareAsc, differenceInDays, parseISO } from 'date-fns';
 
 import SchedulersWithConfirmButton from './components/SchedulersWithConfirmButton';
 
-const stableDate = set(new Date(), { minutes: 0, seconds: 0, milliseconds: 0 });
-const mockInterviewStartWeek = [
-  stableDate,
-  add(stableDate, { weeks: 1 }),
-  add(stableDate, { weeks: 2 }),
-];
-const mockUserSchedule = [
-  add(stableDate, { hours: 1 }),
-  add(stableDate, { hours: 2 }),
-  add(stableDate, { hours: 2, days: 1 }),
-  add(stableDate, { hours: 3, days: 1 }),
-  add(stableDate, { hours: 4, days: 1 }),
-  add(stableDate, { hours: 4, weeks: 1 }),
-  add(stableDate, { hours: 5, weeks: 1 }),
-  add(stableDate, { hours: 2, days: 3, weeks: 1 }),
-  add(stableDate, { hours: 3, days: 3, weeks: 1 }),
-  add(stableDate, { hours: 6, weeks: 2 }),
-  add(stableDate, { hours: 7, weeks: 2 }),
-  add(stableDate, { hours: 2, days: 4, weeks: 2 }),
-  add(stableDate, { hours: 3, days: 4, weeks: 2 }),
-];
+import { UserContext } from '@Contexts';
+import {
+  AppUserProfileResponse,
+  AppUserInterviewAvailability,
+  InterviewDatesResponse,
+} from '@Services/api';
+import { InterviewWeekStartDate } from '@Services/api/models';
+import { getUserProfile } from '@Services/UserService';
+import { getInterviewStartDates } from '@Services/InductionClassService';
 
-function InterviewSchedulingPage(): JSX.Element {
-  // Add code to get interview start dates here (start date of each interview week)
-  // const [interviewStartDates, setInterviewStartDates] = useState<Date[]>([]);
-  // const [existingUserSchedules, setExistingUserSchedules] = useState<Date[]>([]);
+function splitScheduleByWeek(
+  interviewStartWeek: Date[],
+  userSchedule: Date[]
+): Date[][] {
+  const scheduleSplitByWeek: Date[][] = Array(interviewStartWeek.length).fill(
+    []
+  );
 
-  const splitExistingScheduleByWeek = (
-    interviewStartWeek: Date[],
-    userSchedule: Date[]
-  ): Date[][] => {
-    const scheduleSplitByWeek: Date[][] = Array(interviewStartWeek.length).fill(
-      []
-    );
+  for (let i = 0; i < userSchedule.length; i += 1) {
+    const currUserDate = userSchedule[i];
 
-    for (let i = 0; i < userSchedule.length; i += 1) {
-      const currUserDate = userSchedule[i];
+    for (let j = 0; j < interviewStartWeek.length; j += 1) {
+      const currStartWeek = interviewStartWeek[j];
 
-      for (let j = 0; j < interviewStartWeek.length; j += 1) {
-        const currStartWeek = interviewStartWeek[j];
+      if (j < interviewStartWeek.length - 1) {
+        const nextStartWeek = interviewStartWeek[j + 1];
 
-        if (j < interviewStartWeek.length - 1) {
-          const nextStartWeek = interviewStartWeek[j + 1];
-
-          if (
-            compareAsc(currUserDate, currStartWeek) >= 0 &&
-            compareAsc(nextStartWeek, currUserDate) > 0
-          ) {
-            // scheduleSplitByWeek[j].push(currUserDate) doesn't work for some reason
-            // (kept adding currUserDate to all Date[] elements in scheduleSplitByWeek),
-            // so had to do this to get it to work
-            const weekToChange = Array.from(scheduleSplitByWeek[j]);
-            weekToChange.push(currUserDate);
-            scheduleSplitByWeek[j] = weekToChange;
-            break;
-          }
-        } else if (
+        if (
           compareAsc(currUserDate, currStartWeek) >= 0 &&
-          differenceInDays(currUserDate, currStartWeek) < 5
+          compareAsc(nextStartWeek, currUserDate) > 0
         ) {
-          // Should be (diffInDays < numDays), where numDays is number of days to include in a week, but it is 5
-          // right now because numDays for schedulers is 5 by default.
+          // scheduleSplitByWeek[j].push(currUserDate) doesn't work for some reason
+          // (kept adding currUserDate to all Date[] elements in scheduleSplitByWeek),
+          // so had to do this to get it to work
           const weekToChange = Array.from(scheduleSplitByWeek[j]);
           weekToChange.push(currUserDate);
           scheduleSplitByWeek[j] = weekToChange;
+          break;
         }
+      } else if (
+        compareAsc(currUserDate, currStartWeek) >= 0 &&
+        differenceInDays(currUserDate, currStartWeek) < 5
+      ) {
+        // Should be (diffInDays < numDays), where numDays is number of days to include in a week, but it is 5
+        // right now because numDays for schedulers is 5 by default.
+        const weekToChange = Array.from(scheduleSplitByWeek[j]);
+        weekToChange.push(currUserDate);
+        scheduleSplitByWeek[j] = weekToChange;
       }
     }
+  }
 
-    return scheduleSplitByWeek;
-  };
+  return scheduleSplitByWeek;
+}
+
+export default function InterviewSchedulingPage(): JSX.Element {
+  const userContext = useContext(UserContext);
+  const [existingUserSchedules, setExistingUserSchedules] = useState<Date[]>(
+    []
+  );
+  const [interviewStartDates, setInterviewStartDates] = useState<Date[]>([]);
+
+  useEffect(() => {
+    const getUserFunc = async () => {
+      if (userContext == null) {
+        return;
+      }
+      const { userId } = userContext;
+      const res: AppUserProfileResponse = await getUserProfile(
+        parseInt(userId, 10)
+      );
+      const { availabilities } = res;
+      if (availabilities == null) {
+        setExistingUserSchedules([]);
+        return;
+      }
+
+      const startDates = availabilities.map(
+        (availability: AppUserInterviewAvailability) => {
+          return parseISO(availability.start);
+        }
+      );
+
+      setExistingUserSchedules(startDates);
+    };
+    getUserFunc();
+  }, [userContext]);
+
+  useEffect(() => {
+    const getInterviewWeekStartDateFunc = async () => {
+      // hardcoded induction class for now
+      const res: InterviewDatesResponse = await getInterviewStartDates('FA20');
+      const interviewStartDateObjs: Date[] = res.interviewWeeks.map(
+        (interviewWeekStartDate: InterviewWeekStartDate) => {
+          return parseISO(interviewWeekStartDate.startDate);
+        }
+      );
+      setInterviewStartDates(interviewStartDateObjs);
+    };
+    getInterviewWeekStartDateFunc();
+  }, []);
 
   // This will spawn N number of schedule selectors if there are N elements in startDates
+  const scheduleByWeek = splitScheduleByWeek(
+    interviewStartDates,
+    existingUserSchedules
+  );
+
   return (
     <SchedulersWithConfirmButton
-      startDates={mockInterviewStartWeek}
-      existingUserSchedule={splitExistingScheduleByWeek(
-        mockInterviewStartWeek,
-        mockUserSchedule
-      )}
+      startDates={interviewStartDates}
+      existingUserSchedule={scheduleByWeek}
     />
   );
 }
-
-export default InterviewSchedulingPage;
