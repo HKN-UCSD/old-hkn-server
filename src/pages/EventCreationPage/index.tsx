@@ -34,7 +34,7 @@ function EventCreationPage(): JSX.Element {
   };
 
   const handleCancel = () => {
-    history.push(ROUTES.CALENDAR);
+    history.push(ROUTES.HOME);
   };
 
   return (

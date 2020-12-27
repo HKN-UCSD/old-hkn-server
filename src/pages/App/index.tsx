@@ -10,7 +10,6 @@ import {
   PointsPage,
   InducteePointsPage,
   ResumePage,
-  EventsPage,
   CalendarPage,
   EventEditPage,
   EventDetailsPage,
@@ -102,11 +101,6 @@ function App(): JSX.Element {
           />
           <Route
             exact
-            path={ROUTES.HOME}
-            render={props => InducteeRoutingPermission(EventsPage)(props)}
-          />
-          <Route
-            exact
             path={ROUTES.POINTS}
             render={props => InducteeRoutingPermission(PointsPage)(props)}
           />
@@ -124,7 +118,7 @@ function App(): JSX.Element {
           />
           <Route
             exact
-            path={ROUTES.CALENDAR}
+            path={ROUTES.HOME}
             render={props => InducteeRoutingPermission(CalendarPage)(props)}
           />
           <Route

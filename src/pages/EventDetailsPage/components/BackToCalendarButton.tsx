@@ -12,7 +12,7 @@ export default function BackToCalendarButton() {
       secondary
       negative
       onClick={() => {
-        history.push(ROUTES.CALENDAR);
+        history.push(ROUTES.HOME);
       }}
     >
       Back To Calendar

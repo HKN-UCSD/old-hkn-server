@@ -1,7 +1,6 @@
 // export const LANDING = '/'
 export const SIGN_UP = '/signup';
 export const SIGN_IN = '/login';
-export const CALENDAR = '/calendar';
 export const HOME = '/';
 export const EVENTS = '/events';
 export const POINTS = '/points/:id';
@@ -10,7 +9,6 @@ export const INDUCTEES = '/inductees';
 export const EVENT_EDIT = '/events/:eventId/edit';
 export const EVENT_DETAILS = '/events/:id';
 export const EVENT_CREATION = '/events?create=true';
-export const TEST = '/test';
 export const PROFILE = '/profile/:id';
 export const PROFILE_EDIT = '/profile/:id/edit';
 export const EVENT_SIGN_IN = '/events/:id/signin';

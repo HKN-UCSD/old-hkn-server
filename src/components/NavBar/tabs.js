@@ -3,13 +3,12 @@ import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import EventIcon from '@material-ui/icons/Event';
-import HomeIcon from '@material-ui/icons/Home';
 import AlarmIcon from '@material-ui/icons/Alarm';
 
 import * as ROUTES from '@Constants/routes';
 
-const CalendarTab = {
-  route: ROUTES.CALENDAR,
+const HomeTab = {
+  route: ROUTES.HOME,
   icon: <EventIcon />,
   text: 'Calendar',
 };
@@ -32,12 +31,6 @@ const InterviewTab = {
 //   text: 'Profile',
 // };
 
-const HomeTab = {
-  route: ROUTES.HOME,
-  icon: <HomeIcon />,
-  text: 'Get Involved',
-};
-
 const InducteesTab = {
   route: ROUTES.INDUCTEES,
   icon: <ListAltIcon />,
@@ -53,7 +46,6 @@ const PointsTab = {
 export const OfficerTabs = [
   HomeTab,
   // ProfileTab,
-  CalendarTab,
   ResumeTab,
   InducteesTab,
   PointsTab,
@@ -63,7 +55,6 @@ export const OfficerTabs = [
 export const InducteeTabs = [
   HomeTab,
   // ProfileTab,
-  CalendarTab,
   ResumeTab,
   PointsTab,
   InterviewTab,

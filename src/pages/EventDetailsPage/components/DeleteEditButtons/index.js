@@ -27,7 +27,7 @@ const DeleteEditButtons = props => {
   const confirmButtonProps = {
     name: 'Yes',
     onClick: handleConfirmDelete,
-    to: ROUTES.CALENDAR,
+    to: ROUTES.HOME,
     component: Link,
     positive: true,
   };
