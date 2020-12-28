@@ -26,9 +26,9 @@ class CalendarPage extends React.Component {
       events: [],
       selectedEvent: null,
       view: 'calendar',
-      pending: false,
-      ready: false,
-      complete: false,
+      pending: true,
+      ready: true,
+      complete: true,
     };
   }
 
@@ -113,7 +113,14 @@ class CalendarPage extends React.Component {
   }
 
   render() {
-    const { selectedEvent, events, view } = this.state;
+    const {
+      selectedEvent,
+      events,
+      view,
+      pending,
+      ready,
+      complete,
+    } = this.state;
     const { classes, history } = this.props;
 
     return (
@@ -136,6 +143,7 @@ class CalendarPage extends React.Component {
                 <Checkbox
                   name='pending'
                   onChange={() => this.handlePendingChange()}
+                  checked={pending}
                 />
               ),
               label: 'Pending',
@@ -145,6 +153,7 @@ class CalendarPage extends React.Component {
                 <Checkbox
                   name='ready'
                   onChange={() => this.handleReadyChange()}
+                  checked={ready}
                 />
               }
               label='Ready'
@@ -154,6 +163,7 @@ class CalendarPage extends React.Component {
                 <Checkbox
                   name='complete'
                   onChange={() => this.handleCompleteChange()}
+                  checked={complete}
                 />
               }
               label='Complete'
