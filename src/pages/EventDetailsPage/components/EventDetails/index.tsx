@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Typography, Grid } from '@material-ui/core';
 import { format, parseISO } from 'date-fns';
 
@@ -15,6 +15,9 @@ import {
 } from '@HOCs/RenderPermissions';
 import { Tags, Card, GetLocation } from '@SharedComponents';
 import { EventResponse as EventInfo } from '@Services/api/models';
+import { EventStatusEnum } from '@Services/EventService';
+import { isOfficer } from '@Services/claims';
+import { UserContext } from '@Contexts';
 
 interface EventDetailsComponentProps {
   eventInfo: EventInfo;
@@ -23,6 +26,7 @@ interface EventDetailsComponentProps {
 
 function EventDetailsComponent(props: EventDetailsComponentProps) {
   const { eventInfo, eventId } = props;
+  const userContext = useContext(UserContext);
   const classes = useStyles();
 
   const {
@@ -37,6 +41,7 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
     canvaURL = null,
     signInURL,
     rsvpURL,
+    status,
   } = eventInfo;
 
   const urls = {
@@ -45,6 +50,30 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
       label: 'Facebook',
     },
     canva: { url: canvaURL, label: 'Canva' },
+  };
+
+  const renderSignInButton = () => {
+    if (!isOfficer(userContext)) {
+      return status === EventStatusEnum.Ready ? (
+        <SignInButton eventId={eventId} />
+      ) : (
+        <></>
+      );
+    }
+
+    return <SignInButton eventId={eventId} />;
+  };
+
+  const renderRSVPButton = () => {
+    if (!isOfficer(userContext)) {
+      return status === EventStatusEnum.Ready ? (
+        <RSVPButton eventId={eventId} />
+      ) : (
+        <></>
+      );
+    }
+
+    return <RSVPButton eventId={eventId} />;
   };
 
   return (
@@ -72,12 +101,8 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
 
                     <Grid item>
                       <Grid container justify='flex-end' spacing={1}>
-                        <Grid item>
-                          <SignInButton eventId={eventId} />
-                        </Grid>
-                        <Grid item>
-                          <RSVPButton eventId={eventId} />
-                        </Grid>
+                        <Grid item>{renderSignInButton()}</Grid>
+                        <Grid item>{renderRSVPButton()}</Grid>
                       </Grid>
                     </Grid>
                   </Grid>
