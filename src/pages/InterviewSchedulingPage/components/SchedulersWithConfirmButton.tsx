@@ -1,6 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Grid } from '@material-ui/core';
-import { add, formatISO } from 'date-fns';
+import {
+  add,
+  set,
+  formatISO,
+  parseISO,
+  getYear,
+  getMonth,
+  getDate,
+  getHours,
+} from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
 
 import InterviewScheduler from './InterviewScheduler';
 
@@ -17,6 +27,7 @@ interface SchedulersWithConfirmButtonProps {
 }
 
 const minTimesToPick = 8;
+const commonTimezone = 'America/Los_Angeles'; // PST
 
 const isEqualSchedules = (
   currSchedule: Date[],
@@ -46,6 +57,59 @@ const getStartEndTimesFromStarts = (
   });
 
   return startEndTimes;
+};
+
+const updateTimeValuesFromExistingDate = (
+  dateToExtract: Date,
+  dateToUpdate: Date
+): Date => {
+  const extractedYear = getYear(dateToExtract);
+  const extractedMonth = getMonth(dateToExtract);
+  const extractedDate = getDate(dateToExtract);
+  const extractedHours = getHours(dateToExtract);
+
+  const updatedDate = set(dateToUpdate, {
+    year: extractedYear,
+    month: extractedMonth,
+    date: extractedDate,
+    hours: extractedHours,
+    minutes: 0,
+    seconds: 0,
+    milliseconds: 0,
+  });
+
+  return updatedDate;
+};
+
+const convertClientTimezoneToCommonTZ = (
+  availabilities: InterviewAvailability[]
+): InterviewAvailability[] => {
+  const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone; // Sauce: https://stackoverflow.com/a/34602679
+  let convertedAvailabilities = availabilities;
+
+  if (clientTimezone !== commonTimezone) {
+    convertedAvailabilities = convertedAvailabilities.map(
+      ({ start, end }: InterviewAvailability) => {
+        const placeholderTimeInPST = utcToZonedTime(new Date(), commonTimezone);
+
+        const startTimeInCommonTZ = updateTimeValuesFromExistingDate(
+          parseISO(start),
+          placeholderTimeInPST
+        );
+        const endTimeInCommonTZ = updateTimeValuesFromExistingDate(
+          parseISO(end),
+          placeholderTimeInPST
+        );
+
+        return {
+          start: formatISO(startTimeInCommonTZ),
+          end: formatISO(endTimeInCommonTZ),
+        };
+      }
+    );
+  }
+
+  return convertedAvailabilities;
 };
 
 function SchedulersWithConfirmButton({
@@ -83,14 +147,17 @@ function SchedulersWithConfirmButton({
     const flattenedSchedule = userSchedules.flat();
 
     if (flattenedSchedule.length >= minTimesToPick) {
-      const availabilitiesToSend = getStartEndTimesFromStarts(
-        flattenedSchedule
+      const availabilities = getStartEndTimesFromStarts(flattenedSchedule);
+
+      const availabilitiesInCommonTZ = convertClientTimezoneToCommonTZ(
+        availabilities
       );
+      console.log(availabilitiesInCommonTZ);
 
       // Make API call here
       await updateUserInterviewAvailabilities(
         parseInt(userId, 10),
-        availabilitiesToSend
+        availabilitiesInCommonTZ
       );
 
       setIsDirty(false);
