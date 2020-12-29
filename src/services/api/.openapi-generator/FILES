@@ -32,6 +32,7 @@ models\InterviewWeekStartDate.ts
 models\MultipleAppUserResponse.ts
 models\MultipleAttendanceQuery.ts
 models\MultipleAttendanceResponse.ts
+models\MultipleEventQuery.ts
 models\MultipleEventResponse.ts
 models\MultipleInducteePointsResponse.ts
 models\MultipleUserNameResponse.ts

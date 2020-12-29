@@ -10,6 +10,7 @@ import {
   EventControllerCheckOffEventAttendanceRequest,
   EventControllerAffiliateEventSigninRequest,
   EventControllerAffiliateEventRSVPRequest,
+  EventControllerGetMultipleEventsRequest,
 } from './api/apis/EventApi';
 import {
   MultipleEventResponse,
@@ -28,10 +29,13 @@ export {
   EventResponseStatusEnum as EventStatusEnum,
 } from './api/models';
 
-export async function getAllEvents(): Promise<MultipleEventResponse> {
+export async function getAllEvents(
+  queryParams: EventControllerGetMultipleEventsRequest
+): Promise<MultipleEventResponse> {
   const apiConfig: Configuration = await ApiConfigStore.getApiConfig();
   const eventApi: EventApi = new EventApi(apiConfig);
-  return eventApi.eventControllerGetMultipleEvents();
+
+  return eventApi.eventControllerGetMultipleEvents(queryParams);
 }
 
 export async function getEventAttendances(

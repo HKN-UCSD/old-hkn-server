@@ -71,6 +71,12 @@ export interface EventControllerGetEventAttendanceRequest {
   inductee?: boolean;
 }
 
+export interface EventControllerGetMultipleEventsRequest {
+  pending?: boolean;
+  ready?: boolean;
+  complete?: boolean;
+}
+
 export interface EventControllerRsvpForEventRequest {
   eventID: number;
   appUserEventRequest?: AppUserEventRequest;
@@ -477,13 +483,34 @@ export class EventApi extends runtime.BaseAPI {
   /**
    * Get multiple events
    */
-  async eventControllerGetMultipleEventsRaw(): Promise<
-    runtime.ApiResponse<MultipleEventResponse>
-  > {
+  async eventControllerGetMultipleEventsRaw(
+    requestParameters: EventControllerGetMultipleEventsRequest
+  ): Promise<runtime.ApiResponse<MultipleEventResponse>> {
     const queryParameters: any = {};
+
+    if (requestParameters.pending !== undefined) {
+      queryParameters['pending'] = requestParameters.pending;
+    }
+
+    if (requestParameters.ready !== undefined) {
+      queryParameters['ready'] = requestParameters.ready;
+    }
+
+    if (requestParameters.complete !== undefined) {
+      queryParameters['complete'] = requestParameters.complete;
+    }
 
     const headerParameters: runtime.HTTPHeaders = {};
 
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString =
+        typeof token === 'function' ? token('TokenAuth', []) : token;
+
+      if (tokenString) {
+        headerParameters['Authorization'] = `Bearer ${tokenString}`;
+      }
+    }
     const response = await this.request({
       path: `/api/events/`,
       method: 'GET',
@@ -499,8 +526,12 @@ export class EventApi extends runtime.BaseAPI {
   /**
    * Get multiple events
    */
-  async eventControllerGetMultipleEvents(): Promise<MultipleEventResponse> {
-    const response = await this.eventControllerGetMultipleEventsRaw();
+  async eventControllerGetMultipleEvents(
+    requestParameters: EventControllerGetMultipleEventsRequest
+  ): Promise<MultipleEventResponse> {
+    const response = await this.eventControllerGetMultipleEventsRaw(
+      requestParameters
+    );
     return await response.value();
   }
 
