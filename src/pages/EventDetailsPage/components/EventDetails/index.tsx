@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Typography, Grid } from '@material-ui/core';
 import { format, parseISO } from 'date-fns';
 
@@ -16,8 +16,6 @@ import {
 import { Tags, Card, GetLocation } from '@SharedComponents';
 import { EventResponse as EventInfo } from '@Services/api/models';
 import { EventStatusEnum } from '@Services/EventService';
-import { isOfficer } from '@Services/claims';
-import { UserContext } from '@Contexts';
 
 interface EventDetailsComponentProps {
   eventInfo: EventInfo;
@@ -26,7 +24,6 @@ interface EventDetailsComponentProps {
 
 function EventDetailsComponent(props: EventDetailsComponentProps) {
   const { eventInfo, eventId } = props;
-  const userContext = useContext(UserContext);
   const classes = useStyles();
 
   const {
@@ -52,29 +49,15 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
     canva: { url: canvaURL, label: 'Canva' },
   };
 
-  const renderSignInButton = () => {
-    if (!isOfficer(userContext)) {
-      return status === EventStatusEnum.Ready ? (
-        <SignInButton eventId={eventId} />
-      ) : (
-        <></>
-      );
-    }
+  const renderSignInButton = () =>
+    status === EventStatusEnum.Ready ? (
+      <SignInButton eventId={eventId} />
+    ) : (
+      <></>
+    );
 
-    return <SignInButton eventId={eventId} />;
-  };
-
-  const renderRSVPButton = () => {
-    if (!isOfficer(userContext)) {
-      return status === EventStatusEnum.Ready ? (
-        <RSVPButton eventId={eventId} />
-      ) : (
-        <></>
-      );
-    }
-
-    return <RSVPButton eventId={eventId} />;
-  };
+  const renderRSVPButton = () =>
+    status === EventStatusEnum.Ready ? <RSVPButton eventId={eventId} /> : <></>;
 
   return (
     <Grid container justify='center' spacing={3}>
