@@ -49,15 +49,20 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
     canva: { url: canvaURL, label: 'Canva' },
   };
 
-  const renderSignInButton = () =>
+  const renderSignInRSVPButtons = () =>
     status === EventStatusEnum.Ready ? (
-      <SignInButton eventId={eventId} />
+      <Grid container justify='flex-end' spacing={1}>
+        <Grid item>
+          <SignInButton eventId={eventId} />
+        </Grid>
+
+        <Grid item>
+          <RSVPButton eventId={eventId} />
+        </Grid>
+      </Grid>
     ) : (
       <></>
     );
-
-  const renderRSVPButton = () =>
-    status === EventStatusEnum.Ready ? <RSVPButton eventId={eventId} /> : <></>;
 
   return (
     <Grid container justify='center' spacing={3}>
@@ -82,12 +87,7 @@ function EventDetailsComponent(props: EventDetailsComponentProps) {
                       })}
                     </Grid>
 
-                    <Grid item>
-                      <Grid container justify='flex-end' spacing={1}>
-                        <Grid item>{renderSignInButton()}</Grid>
-                        <Grid item>{renderRSVPButton()}</Grid>
-                      </Grid>
-                    </Grid>
+                    <Grid item>{renderSignInRSVPButtons()}</Grid>
                   </Grid>
                 </Grid>
               </Grid>
