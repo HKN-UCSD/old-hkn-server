@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router';
 import { Avatar, Typography, Grid } from '@material-ui/core';
 
 import EventSignInForm from './components/EventSignInForm';
 import useStyles from './styles';
 
+import { useRequest } from '@Hooks';
 import HKN_TRIDENT_LOGO from '@Images/hkn-trident.png';
 import { Loading, Card, PublicPageLayout } from '@SharedComponents';
 import { getEventById, signInToEvent } from '@Services/EventService';
-import { EventResponse, AppUserEventRequest } from '@Services/api/models';
 
 interface ParamTypes {
   id: string;
@@ -17,20 +17,21 @@ interface ParamTypes {
 function EventSignInPage(): JSX.Element {
   const { id } = useParams<ParamTypes>();
   const eventID = parseInt(id, 10);
-  const [event, setEvent] = useState<EventResponse | null>(null);
   const classes = useStyles();
 
-  useEffect(() => {
-    const getEvent = async () => {
-      const eventResponse: EventResponse = await getEventById(eventID);
-      setEvent(eventResponse);
-    };
-    getEvent();
-  }, [eventID]);
+  const { data: event, isLoading, error } = useRequest(() =>
+    getEventById(eventID)
+  );
 
-  return event == null ? (
-    <Loading />
-  ) : (
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    console.log('do something here');
+  }
+
+  return (
     <PublicPageLayout>
       <Card className={classes.eventSignInCard}>
         <Grid container direction='column' alignItems='center' spacing={3}>
@@ -58,9 +59,7 @@ function EventSignInPage(): JSX.Element {
 
           <Grid item>
             <EventSignInForm
-              handleSubmit={(values: AppUserEventRequest) =>
-                signInToEvent(eventID, values)
-              }
+              handleSubmit={values => signInToEvent(eventID, values)}
             />
           </Grid>
         </Grid>
