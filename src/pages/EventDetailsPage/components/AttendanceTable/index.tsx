@@ -3,40 +3,27 @@ import { parseISO, format } from 'date-fns';
 
 import { useInterval } from '../../../../hooks/index';
 
-import { Button, Table } from '@SharedComponents';
+import { Table } from '@SharedComponents';
 import {
   AttendanceResponse,
   MultipleAttendanceResponse,
+  AppUserEventResponse,
 } from '@Services/api/models';
 
-interface CheckOffTableProps {
+interface AttendanceTableProps {
   getAttendances: () => Promise<MultipleAttendanceResponse>;
-  checkOffAttendance: (
-    eventId: number,
-    attendeeId: number
-  ) => Promise<AttendanceResponse>;
-  eventId: number;
 }
 
-function CheckOffTable(props: CheckOffTableProps) {
-  const { getAttendances, checkOffAttendance, eventId } = props;
+function AttendanceTable(props: AttendanceTableProps) {
+  const { getAttendances } = props;
   const [attendances, setAttendances] = useState<AttendanceResponse[]>([]);
 
   const columns = [
     { title: 'Full Name', field: 'name' },
+    { title: 'Role', field: 'attendeeRole' },
     { title: 'Start Time', field: 'startTimeString' },
-    {
-      title: 'Check Off',
-      render: (rowData: AttendanceResponse) => (
-        <Button
-          primary
-          positive
-          onClick={() => checkOffAttendance(eventId, rowData.attendee.id)}
-        >
-          Check Off
-        </Button>
-      ),
-    },
+    { title: 'End Time', field: 'endTimeString' },
+    { title: 'Checking Officer', field: 'officerName' },
   ];
 
   useEffect(() => {
@@ -57,16 +44,38 @@ function CheckOffTable(props: CheckOffTableProps) {
   });
 
   const attendanceData = attendances.map(attendance => {
-    const fullName = `${attendance.attendee.firstName} ${attendance.attendee.lastName}`;
+    const {
+      firstName: attendeeFirstName,
+      lastName: attendeeLastName,
+      role,
+    }: AppUserEventResponse = attendance.attendee;
+    const fullName = `${attendeeFirstName} ${attendeeLastName}`;
+    const attendeeRole = role.charAt(0).toUpperCase() + role.slice(1);
+
     // TODO: Remove type casting on startTime when startTime on payload is changed to string and move map logic to a separate function
     const startTimeString = format(
       parseISO((attendance.startTime as unknown) as string),
       'PPP h:mm aaaa'
     );
+
+    const endTimeString = format(
+      parseISO((attendance.endTime as unknown) as string),
+      'PPP h:mm aaaa'
+    );
+
+    const {
+      firstName: officerFirstName,
+      lastName: officerLastName,
+    }: AppUserEventResponse = attendance.officer;
+    const officerName = `${officerFirstName} ${officerLastName}`;
+
     const attendanceToDisplay = {
       ...attendance,
       name: fullName,
+      attendeeRole,
       startTimeString,
+      endTimeString,
+      officerName,
     };
 
     return attendanceToDisplay;
@@ -75,4 +84,4 @@ function CheckOffTable(props: CheckOffTableProps) {
   return <Table columns={columns} data={attendanceData} title='' />;
 }
 
-export default CheckOffTable;
+export default AttendanceTable;
