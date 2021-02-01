@@ -20,10 +20,12 @@ function AttendanceTable(props: AttendanceTableProps) {
 
   const columns = [
     { title: 'Full Name', field: 'name' },
+    { title: 'Email', field: 'email' },
     { title: 'Role', field: 'attendeeRole' },
     { title: 'Start Time', field: 'startTimeString' },
     { title: 'End Time', field: 'endTimeString' },
     { title: 'Checking Officer', field: 'officerName' },
+    { title: 'Points', field: 'points' },
   ];
 
   useEffect(() => {
@@ -47,6 +49,7 @@ function AttendanceTable(props: AttendanceTableProps) {
     const {
       firstName: attendeeFirstName,
       lastName: attendeeLastName,
+      email: attendeeEmail,
       role,
     }: AppUserEventResponse = attendance.attendee;
     const fullName = `${attendeeFirstName} ${attendeeLastName}`;
@@ -55,12 +58,12 @@ function AttendanceTable(props: AttendanceTableProps) {
     // TODO: Remove type casting on startTime when startTime on payload is changed to string and move map logic to a separate function
     const startTimeString = format(
       parseISO((attendance.startTime as unknown) as string),
-      'PPP h:mm aaaa'
+      'p'
     );
 
     const endTimeString = format(
       parseISO((attendance.endTime as unknown) as string),
-      'PPP h:mm aaaa'
+      'p'
     );
 
     const {
@@ -69,13 +72,17 @@ function AttendanceTable(props: AttendanceTableProps) {
     }: AppUserEventResponse = attendance.officer;
     const officerName = `${officerFirstName} ${officerLastName}`;
 
+    const attendeePoints = attendance.points;
+
     const attendanceToDisplay = {
       ...attendance,
       name: fullName,
+      email: attendeeEmail,
       attendeeRole,
       startTimeString,
       endTimeString,
       officerName,
+      attendeePoints,
     };
 
     return attendanceToDisplay;

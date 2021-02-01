@@ -61,7 +61,7 @@ function CheckOffTable(props: CheckOffTableProps) {
     // TODO: Remove type casting on startTime when startTime on payload is changed to string and move map logic to a separate function
     const startTimeString = format(
       parseISO((attendance.startTime as unknown) as string),
-      'PPP h:mm aaaa'
+      'p'
     );
     const attendanceToDisplay = {
       ...attendance,
