@@ -57,7 +57,14 @@ function RSVPTable(props: RSVPTableProps) {
     return rsvpToDisplay;
   });
 
-  return <Table columns={columns} data={rsvpData} title='' />;
+  return (
+    <Table
+      columns={columns}
+      data={rsvpData}
+      title=''
+      options={{ exportButton: true }}
+    />
+  );
 }
 
 export default RSVPTable;

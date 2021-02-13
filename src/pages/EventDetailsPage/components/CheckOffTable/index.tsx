@@ -72,7 +72,14 @@ function CheckOffTable(props: CheckOffTableProps) {
     return attendanceToDisplay;
   });
 
-  return <Table columns={columns} data={attendanceData} title='' />;
+  return (
+    <Table
+      columns={columns}
+      data={attendanceData}
+      title=''
+      options={{ exportButton: true }}
+    />
+  );
 }
 
 export default CheckOffTable;

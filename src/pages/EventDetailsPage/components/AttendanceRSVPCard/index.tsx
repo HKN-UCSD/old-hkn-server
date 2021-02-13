@@ -35,9 +35,9 @@ function AttendanceRSVPCard({ eventID }: AttendanceRSVPCardProps) {
   const rsvpTable = <RSVPTable getRSVPs={() => getEventRSVPs(eventID)} />;
 
   const tabs: CardWithVerticalTabsProps['items'] = [
-    { title: 'Attendance Check Off', element: checkOffTable },
-    { title: 'Attendance Table', element: attendanceTable },
-    { title: 'RSVP Table', element: rsvpTable },
+    { title: 'Check Off', element: checkOffTable },
+    { title: 'Attendance', element: attendanceTable },
+    { title: 'RSVP', element: rsvpTable },
   ];
 
   return OfficerRenderPermission(CardWithVerticalTabs)({

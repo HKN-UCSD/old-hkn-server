@@ -30,8 +30,6 @@ const attendanceResponseToAttendanceRow = (attendance: AttendanceResponse) => {
     'p'
   );
 
-  console.log(attendance.startTime);
-
   const endTimeString =
     attendance.endTime == null
       ? ''
@@ -98,7 +96,14 @@ function AttendanceTable(props: AttendanceTableProps) {
     attendanceResponseToAttendanceRow(attendance)
   );
 
-  return <Table columns={columns} data={attendanceData} title='' />;
+  return (
+    <Table
+      columns={columns}
+      data={attendanceData}
+      title=''
+      options={{ exportButton: true }}
+    />
+  );
 }
 
 export default AttendanceTable;
