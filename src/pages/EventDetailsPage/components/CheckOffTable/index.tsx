@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { parseISO, format } from 'date-fns';
 
-import { useInterval } from '../../../../hooks/index';
-
+import { useInterval } from '@Hooks';
 import { Button, Table } from '@SharedComponents';
 import {
   AttendanceResponse,

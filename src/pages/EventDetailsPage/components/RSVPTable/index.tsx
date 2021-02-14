@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { useInterval } from '../../../../hooks/index';
-
+import { useInterval } from '@Hooks';
 import { Table } from '@SharedComponents';
 import {
   RSVPResponse,
