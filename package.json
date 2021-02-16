@@ -60,7 +60,9 @@
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "precodegen": "rimraf src/api/*",
-    "codegen": "npx openapi-generator generate -i https://api.hknucsd.com/api/docs/json -g typescript-fetch --additional-properties=typescriptThreePlus=true -o src/services/api"
+    "codegen": "npx openapi-generator generate -i https://api.hknucsd.com/api/docs/json -g typescript-fetch --additional-properties=typescriptThreePlus=true -o src/services/api",
+    "docker:start": "docker run -p 3000:3000 -v $PWD/src:/run/src --env-file .env -it hkn-frontend:latest npm run start",
+    "docker:build": "docker build --tag hkn-frontend:latest ."
   },
   "eslintConfig": {
     "extends": "react-app"
